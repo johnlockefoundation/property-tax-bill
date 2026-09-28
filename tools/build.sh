@@ -27,6 +27,7 @@ echo "building $PLUGIN_SLUG $VERSION"
 # --- stage -----------------------------------------------------------------
 mkdir -p "$STAGE/$PLUGIN_SLUG"
 rsync -a \
+  --exclude .git \
   --exclude node_modules \
   --exclude tests \
   --exclude package.json \
