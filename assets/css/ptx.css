@@ -1,0 +1,740 @@
+/* ==========================================================================
+   NC Property Tax Bill — widget stylesheet
+   Ported from the live GitHub Pages demo (property-tax-demo/index.html).
+
+   Two rules govern this file:
+
+   1. FIDELITY. Declarations, values and the cascade are the demo's, unchanged,
+      so the receipt renders pixel-identically. Where the demo relied on a UA
+      default (an h1's weight, a p's margin) the value is now stated
+      explicitly, because a WordPress theme will otherwise supply its own.
+
+   2. SCOPE. Every selector is prefixed with .ptx. The demo styled bare elements
+      (body, h1, p, *, .hidden) which inside WordPress would either inherit theme
+      type or — worse — leak the widget's rules onto the theme's pages. Tests in
+      tests/parity.test.mjs fail the build if an unscoped selector appears.
+
+   Custom properties sit on .ptx rather than :root so two shortcodes on one
+   page cannot redefine each other's palette.
+   ========================================================================== */
+
+.ptx {
+  --jlf: #00467f;
+  --jlf-dark: #00325c;
+  --red: #c41230;
+  --green: #04843d;
+  --ink: #1a1919;
+  --muted: #5a6a7a;
+  --line: #dfe3e8;
+  --bg: #f3f4e7;
+
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Public Sans", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.ptx,
+.ptx *,
+.ptx *::before,
+.ptx *::after {
+  box-sizing: border-box;
+}
+
+/* The tool is placed in two places: a full-width page, and inside an article
+   column. A viewport media query cannot tell those apart — an article can be
+   700px wide on a 1400px screen — so .ptx is a query container and the layout
+   responds to the width it is actually given. The viewport media queries at the
+   bottom are kept as the fallback for browsers without container queries. */
+.ptx {
+  container-type: inline-size;
+  container-name: ptx;
+}
+
+/* --- brand bar ---------------------------------------------------------- */
+
+.ptx-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 20px;
+  background: var(--jlf);
+  color: #fff;
+  flex-wrap: wrap;
+}
+
+.ptx-header .ptx-brand {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+  margin-right: auto;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 2px;
+}
+
+.ptx-header .ptx-brand a:hover {
+  color: #fff;
+  text-decoration-color: #fff;
+}
+
+.ptx-header .ptx-hdr-right img {
+  height: 30px;
+  width: auto;
+  display: block;
+}
+
+/* --- shell -------------------------------------------------------------- */
+
+.ptx-wrap {
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 30px 18px 64px;
+}
+
+.ptx-title {
+  font-family: inherit;
+  font-size: clamp(23px, 3.6vw, 32px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0 0 10px;
+  padding: 0;
+}
+
+.ptx-lede {
+  font-family: inherit;
+  font-size: 16.5px;
+  color: var(--muted);
+  margin: 0 0 24px;
+  max-width: 58ch;
+}
+
+/* --- search card -------------------------------------------------------- */
+
+.ptx-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.ptx-cols {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.ptx-cols > .ptx-card {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ptx-county-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.ptx-select {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 9px 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  min-width: 210px;
+}
+
+.ptx-search-row {
+  display: flex;
+  gap: 8px;
+}
+
+.ptx-input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 15px;
+  padding: 12px 13px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  min-width: 0;
+}
+
+.ptx-input:disabled {
+  background: #eee;
+  color: #999;
+}
+
+.ptx-btn {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  background: var(--jlf);
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ptx-btn:hover {
+  background: var(--jlf-dark);
+}
+
+.ptx-btn:disabled {
+  background: #9aa7b5;
+  cursor: default;
+}
+
+.ptx-hint {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin: 9px 0 0;
+  line-height: 1.45;
+}
+
+.ptx-status {
+  font-size: 13px;
+  color: #555;
+  margin: 12px 0 0;
+  min-height: 18px;
+}
+
+.ptx-cands {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.ptx-cands li {
+  list-style: none;
+  width: 100%;
+  text-align: left;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fafafa;
+  padding: 10px 12px;
+  margin-bottom: 7px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.ptx-cands li:hover {
+  border-color: var(--jlf);
+  background: #d3e6f5;
+}
+
+.ptx-cands li .ptx-pid {
+  color: #777;
+  font-size: 12px;
+}
+
+.ptx-cands li .ptx-val {
+  color: var(--jlf);
+  font-weight: 700;
+}
+
+.ptx-nores {
+  color: var(--red);
+}
+
+.ptx-nores p {
+  margin: 0;
+}
+
+.ptx-hidden {
+  display: none !important;
+}
+
+/* --- receipt ------------------------------------------------------------ */
+
+.ptx-results {
+  flex: 0 0 400px;
+  margin-top: 0;
+}
+
+.ptx-receipt {
+  --paper: #fffdf6;
+  position: relative;
+  width: 372px;
+  max-width: 100%;
+  margin: 16px auto 0;
+  padding: 24px 22px 16px;
+  background: var(--paper);
+  color: #1c1c1c;
+  font-family: "Courier Prime", "Courier New", ui-monospace, monospace;
+  font-size: 13.5px;
+  line-height: 1.5;
+  filter: drop-shadow(0 7px 16px rgba(0, 0, 0, 0.16));
+}
+
+.ptx-receipt::before,
+.ptx-receipt::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background-repeat: repeat-x;
+  background-size: 20px 10px;
+}
+
+.ptx-receipt::before {
+  top: -10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10'%3E%3Cpath d='M0 10 L10 0 L20 10 Z' fill='%23fffdf6'/%3E%3C/svg%3E");
+}
+
+.ptx-receipt::after {
+  bottom: -10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10'%3E%3Cpath d='M0 0 L10 10 L20 0 Z' fill='%23fffdf6'/%3E%3C/svg%3E");
+}
+
+.ptx-receipt-brand {
+  text-align: center;
+  font-weight: 700;
+  font-size: 14.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ptx-receipt-instruction {
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  padding: 34px 6px;
+}
+
+.ptx-receipt-rule {
+  border-top: 1px dashed #b9b4a5;
+  margin: 12px 0;
+}
+
+.ptx-receipt-meta {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 12px;
+  color: #38352e;
+}
+
+.ptx-receipt-addr {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 13.5px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.ptx-receipt-line {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 5px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 12.5px;
+}
+
+.ptx-receipt-line .ptx-leader {
+  flex: 1;
+  min-width: 14px;
+  border-bottom: 2px dotted #9a958a;
+  transform: translateY(-3px);
+}
+
+.ptx-receipt-line .ptx-amt {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ptx-receipt-total {
+  text-align: center;
+  padding: 6px 0 2px;
+}
+
+.ptx-receipt-total-label {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  color: var(--red);
+  font-weight: 700;
+}
+
+.ptx-receipt-total-amt {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.ptx-receipt-total-pct {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 14px;
+  color: #55524a;
+}
+
+.ptx-receipt-barcode {
+  height: 42px;
+  width: 82%;
+  margin: 16px auto 8px;
+  background: repeating-linear-gradient(
+    90deg,
+    #1c1c1c 0 2px,
+    transparent 2px 5px,
+    #1c1c1c 5px 6px,
+    transparent 6px 10px,
+    #1c1c1c 10px 13px,
+    transparent 13px 15px,
+    #1c1c1c 15px 16px,
+    transparent 16px 21px
+  );
+}
+
+.ptx-receipt-thanks {
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  font-size: 12.5px;
+}
+
+.ptx-below {
+  width: 372px;
+  max-width: 100%;
+  margin: 16px auto 0;
+  padding: 22px;
+  background: #e7f5ec;
+  border: 1px dashed #7fbf98;
+  font-family: "Courier Prime", "Courier New", monospace;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+/* --- methodology disclosure -------------------------------------------- */
+
+.ptx-method {
+  margin-top: 18px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.ptx-method > summary {
+  display: block;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 15px;
+  list-style: none;
+}
+
+.ptx-method > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ptx-method > summary::marker {
+  content: "";
+}
+
+.ptx-method > summary::after {
+  content: " ▾";
+  color: var(--jlf);
+}
+
+.ptx-method[open] > summary::after {
+  content: " ▴";
+}
+
+.ptx-method-body {
+  font-size: 13.5px;
+  color: #444;
+  margin-top: 14px;
+  line-height: 1.55;
+}
+
+.ptx-method-body dl {
+  margin: 0;
+}
+
+.ptx-method-body dt {
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 12px;
+}
+
+.ptx-method-body dt:first-child {
+  margin-top: 0;
+}
+
+.ptx-method-body dd {
+  margin: 2px 0 0;
+}
+
+.ptx-method-body p {
+  margin: 1em 0;
+}
+
+.ptx-method-body .ptx-sources a {
+  color: var(--jlf);
+}
+
+/* --- responsive --------------------------------------------------------- */
+
+/* Fires on the width of the tool's own column, not the window. */
+@container ptx (max-width: 760px) {
+  .ptx .ptx-cols {
+    flex-direction: column;
+  }
+
+  .ptx .ptx-results {
+    flex: none;
+    width: 100%;
+    margin-top: 30px;
+  }
+}
+
+/*
+ * layout="compact" — for an article, where the tool should read as part of the
+ * page rather than as its own site. One column always, tighter spacing, and the
+ * search field above its button. The receipt keeps its own width and metrics;
+ * only the frame around it changes.
+ */
+.ptx-layout-compact .ptx-wrap {
+  padding: 22px 16px 36px;
+}
+
+.ptx-layout-compact .ptx-title {
+  font-size: clamp(20px, 2.4vw, 26px);
+}
+
+.ptx-layout-compact .ptx-lede {
+  font-size: 15.5px;
+  margin-bottom: 18px;
+}
+
+.ptx-layout-compact .ptx-cols {
+  flex-direction: column;
+  gap: 0;
+}
+
+.ptx-layout-compact .ptx-cols > .ptx-card {
+  flex: none;
+  width: 100%;
+}
+
+.ptx-layout-compact .ptx-search-row {
+  flex-direction: column;
+}
+
+.ptx-layout-compact .ptx-select {
+  min-width: 0;
+  width: 100%;
+}
+
+.ptx-layout-compact .ptx-results {
+  flex: none;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.ptx-layout-compact .ptx-receipt {
+  margin-top: 0;
+}
+
+.ptx-layout-compact .ptx-method {
+  margin-top: 16px;
+}
+
+/* Viewport fallbacks, same breakpoints as the demo. */
+@media (max-width: 900px) {
+  .ptx .ptx-cols {
+    flex-direction: column;
+  }
+
+  .ptx .ptx-results {
+    flex: none;
+    width: 100%;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 620px) {
+  .ptx .ptx-search-row {
+    flex-direction: column;
+  }
+
+  .ptx .ptx-select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .ptx .ptx-receipt {
+    padding: 22px 16px 14px;
+  }
+
+  .ptx .ptx-receipt-line {
+    font-size: 12px;
+  }
+}
+
+/* ==========================================================================
+   Methodology document — [ptx_methodology]
+   Ported from the demo's docs/methodology.html, which was a standalone print
+   stylesheet. Scoped to .ptx-doc for the same reason as above.
+   ========================================================================== */
+
+.ptx-doc {
+  --doc-ink: #1c2733;
+  --doc-head: #1f2a35;
+  --doc-accent: #315c8c;
+  --doc-muted: #5a6a7a;
+  --doc-faint: #7a8794;
+  --doc-rule: #cfd6dd;
+  --doc-fill: #eef1f4;
+  --doc-panel: #f6f8fa;
+  --doc-code: #f2f4f6;
+
+  color: var(--doc-ink);
+  font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.ptx-doc .ptx-doc-hd {
+  border-bottom: 2.5px solid var(--doc-head);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+}
+
+.ptx-doc .ptx-doc-hd h1 {
+  font-family: inherit;
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin: 0 0 2px;
+  color: var(--doc-head);
+}
+
+.ptx-doc h2 {
+  font-family: inherit;
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin: 22px 0 6px;
+  color: var(--doc-head);
+  border-bottom: 1.5px solid var(--doc-head);
+  padding-bottom: 3px;
+}
+
+.ptx-doc h3 {
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 14px 0 4px;
+  color: var(--doc-accent);
+}
+
+.ptx-doc p {
+  margin: 6px 0;
+}
+
+.ptx-doc ul,
+.ptx-doc ol {
+  margin: 6px 0 8px;
+  padding-left: 20px;
+}
+
+.ptx-doc li {
+  margin: 3px 0;
+}
+
+.ptx-doc .ptx-doc-subtitle {
+  font-size: 1.1rem;
+  color: var(--doc-muted);
+  margin: 0 0 4px;
+}
+
+.ptx-doc .ptx-doc-meta {
+  font-size: 0.9rem;
+  color: var(--doc-faint);
+  margin-top: 2px;
+}
+
+.ptx-doc code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.93em;
+  background: var(--doc-code);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.ptx-doc .ptx-doc-formula {
+  background: var(--doc-panel);
+  border: 1px solid #e1e6ea;
+  border-left: 3px solid var(--doc-accent);
+  padding: 8px 10px;
+  margin: 8px 0;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.95em;
+  border-radius: 3px;
+  overflow-x: auto;
+}
+
+.ptx-doc table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0;
+  font-size: 0.93em;
+}
+
+.ptx-doc th,
+.ptx-doc td {
+  border: 1px solid var(--doc-rule);
+  padding: 4px 6px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.ptx-doc th {
+  background: var(--doc-fill);
+  font-weight: 600;
+}
+
+.ptx-doc a {
+  color: var(--doc-accent);
+  text-decoration: none;
+}
+
+.ptx-doc .ptx-doc-footer {
+  margin-top: 22px;
+  font-size: 0.9rem;
+  color: var(--doc-faint);
+  border-top: 1px solid var(--doc-rule);
+  padding-top: 6px;
+}
+
+@media print {
+  .ptx-doc a {
+    color: inherit;
+  }
+}

@@ -1,0 +1,2702 @@
+{
+  "alamance": {
+    "label": "Alamance County",
+    "fips": "37001",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 27010853334,
+    "act": 133091439,
+    "hyp": 135442505,
+    "cnt_diff": -2351066,
+    "pct_diff": -1.735841,
+    "savings_rate": -0.0437,
+    "savings_rate_fy26": -0.017665043053595657,
+    "l_actual": 133091439,
+    "b_endpoint": 135442505,
+    "l_benchmark": 135442505,
+    "l_scenario": 133091439,
+    "r_actual": 0.492733,
+    "r_scenario": 0.492733,
+    "below_benchmark": true,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 133091439,
+        "hypothetical": 135442505
+      }
+    ]
+  },
+  "alexander": {
+    "label": "Alexander County",
+    "fips": "37003",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 4242495513,
+    "act": 27602273,
+    "hyp": 21113245,
+    "cnt_diff": 6489028,
+    "pct_diff": 30.734394,
+    "savings_rate": 0.169,
+    "savings_rate_fy26": 0.2350903492621785,
+    "l_actual": 27602273,
+    "b_endpoint": 21113245,
+    "l_benchmark": 21113245,
+    "l_scenario": 21113245,
+    "r_actual": 0.650614,
+    "r_scenario": 0.497661,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 27602273,
+        "hypothetical": 21113245
+      }
+    ]
+  },
+  "alleghany": {
+    "label": "Alleghany County",
+    "fips": "37005",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2223775261,
+    "act": 13282980,
+    "hyp": 11147568,
+    "cnt_diff": 2135412,
+    "pct_diff": 19.155855,
+    "savings_rate": 0.1278,
+    "savings_rate_fy26": 0.16076302155088693,
+    "l_actual": 13282980,
+    "b_endpoint": 11147568,
+    "l_benchmark": 11147568,
+    "l_scenario": 11147568,
+    "r_actual": 0.597317,
+    "r_scenario": 0.50129,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 13282980,
+        "hypothetical": 11147568
+      }
+    ]
+  },
+  "anson": {
+    "label": "Anson County",
+    "fips": "37007",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2400672775,
+    "act": 18675283,
+    "hyp": 16526288,
+    "cnt_diff": 2148995,
+    "pct_diff": 13.003495,
+    "savings_rate": 0.0647,
+    "savings_rate_fy26": 0.11507161631767508,
+    "l_actual": 18675283,
+    "b_endpoint": 16526288,
+    "l_benchmark": 16526288,
+    "l_scenario": 16526288,
+    "r_actual": 0.777919,
+    "r_scenario": 0.688402,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 18675283,
+        "hypothetical": 16526288
+      }
+    ]
+  },
+  "ashe": {
+    "label": "Ashe County",
+    "fips": "37009",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 6180747523,
+    "act": 27209339,
+    "hyp": 18502535,
+    "cnt_diff": 8706804,
+    "pct_diff": 47.057357,
+    "savings_rate": 0.2536,
+    "savings_rate_fy26": 0.3199932199749505,
+    "l_actual": 27209339,
+    "b_endpoint": 18502535,
+    "l_benchmark": 18502535,
+    "l_scenario": 18502535,
+    "r_actual": 0.440227,
+    "r_scenario": 0.299358,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 27209339,
+        "hypothetical": 18502535
+      }
+    ]
+  },
+  "avery": {
+    "label": "Avery County",
+    "fips": "37011",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 6539113774,
+    "act": 25945644,
+    "hyp": 22863840,
+    "cnt_diff": 3081804,
+    "pct_diff": 13.478943,
+    "savings_rate": 0.0867,
+    "savings_rate_fy26": 0.11877924479346129,
+    "l_actual": 25945644,
+    "b_endpoint": 22863840,
+    "l_benchmark": 22863840,
+    "l_scenario": 22863840,
+    "r_actual": 0.396776,
+    "r_scenario": 0.349647,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 25945644,
+        "hypothetical": 22863840
+      }
+    ]
+  },
+  "beaufort": {
+    "label": "Beaufort County",
+    "fips": "37013",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 9629636325,
+    "act": 43845067,
+    "hyp": 39448376,
+    "cnt_diff": 4396691,
+    "pct_diff": 11.14543,
+    "savings_rate": 0.0281,
+    "savings_rate_fy26": 0.10027789443222883,
+    "l_actual": 43845067,
+    "b_endpoint": 39448376,
+    "l_benchmark": 39448376,
+    "l_scenario": 39448376,
+    "r_actual": 0.455314,
+    "r_scenario": 0.409656,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 43845067,
+        "hypothetical": 39448376
+      }
+    ]
+  },
+  "bertie": {
+    "label": "Bertie County",
+    "fips": "37015",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 1545183553,
+    "act": 14389275,
+    "hyp": 11653462,
+    "cnt_diff": 2735813,
+    "pct_diff": 23.476397,
+    "savings_rate": 0.1052,
+    "savings_rate_fy26": 0.19012862010073475,
+    "l_actual": 14389275,
+    "b_endpoint": 11653462,
+    "l_benchmark": 11653462,
+    "l_scenario": 11653462,
+    "r_actual": 0.931234,
+    "r_scenario": 0.75418,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 14389275,
+        "hypothetical": 11653462
+      }
+    ]
+  },
+  "bladen": {
+    "label": "Bladen County",
+    "fips": "37017",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 3722356134,
+    "act": 29256108,
+    "hyp": 24505640,
+    "cnt_diff": 4750468,
+    "pct_diff": 19.385203,
+    "savings_rate": 0.1151,
+    "savings_rate_fy26": 0.16237525510912115,
+    "l_actual": 29256108,
+    "b_endpoint": 24505640,
+    "l_benchmark": 24505640,
+    "l_scenario": 24505640,
+    "r_actual": 0.785957,
+    "r_scenario": 0.658337,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 29256108,
+        "hypothetical": 24505640
+      }
+    ]
+  },
+  "brunswick": {
+    "label": "Brunswick County",
+    "fips": "37019",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 56315243011,
+    "act": 192664580,
+    "hyp": 185140911,
+    "cnt_diff": 7523669,
+    "pct_diff": 4.063753,
+    "savings_rate": 0.024,
+    "savings_rate_fy26": 0.039050608056758536,
+    "l_actual": 192664580,
+    "b_endpoint": 185140911,
+    "l_benchmark": 185140911,
+    "l_scenario": 185140911,
+    "r_actual": 0.342118,
+    "r_scenario": 0.328758,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 192664580,
+        "hypothetical": 185140911
+      }
+    ]
+  },
+  "buncombe": {
+    "label": "Buncombe County",
+    "fips": "37021",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 53610452817,
+    "act": 292375443,
+    "hyp": 226040374,
+    "cnt_diff": 66335069,
+    "pct_diff": 29.346558,
+    "savings_rate": 0.1448,
+    "savings_rate_fy26": 0.2268831756844914,
+    "l_actual": 292375443,
+    "b_endpoint": 226040374,
+    "l_benchmark": 226040374,
+    "l_scenario": 226040374,
+    "r_actual": 0.54537,
+    "r_scenario": 0.421635,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 292375443,
+        "hypothetical": 226040374
+      }
+    ]
+  },
+  "burke": {
+    "label": "Burke County",
+    "fips": "37023",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 11182146810,
+    "act": 62141849,
+    "hyp": 52426756,
+    "cnt_diff": 9715093,
+    "pct_diff": 18.530792,
+    "savings_rate": 0.1091,
+    "savings_rate_fy26": 0.15633736614435145,
+    "l_actual": 62141849,
+    "b_endpoint": 52426756,
+    "l_benchmark": 52426756,
+    "l_scenario": 52426756,
+    "r_actual": 0.555724,
+    "r_scenario": 0.468843,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 62141849,
+        "hypothetical": 52426756
+      }
+    ]
+  },
+  "cabarrus": {
+    "label": "Cabarrus County",
+    "fips": "37025",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 49881485579,
+    "act": 287669831,
+    "hyp": 235662856,
+    "cnt_diff": 52006975,
+    "pct_diff": 22.06838,
+    "savings_rate": 0.0922,
+    "savings_rate_fy26": 0.18078703220011974,
+    "l_actual": 287669831,
+    "b_endpoint": 235662856,
+    "l_benchmark": 235662856,
+    "l_scenario": 235662856,
+    "r_actual": 0.576707,
+    "r_scenario": 0.472446,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 287669831,
+        "hypothetical": 235662856
+      }
+    ]
+  },
+  "caldwell": {
+    "label": "Caldwell County",
+    "fips": "37027",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 12156498807,
+    "act": 60478582,
+    "hyp": 49131742,
+    "cnt_diff": 11346840,
+    "pct_diff": 23.094724,
+    "savings_rate": 0.122,
+    "savings_rate_fy26": 0.18761749407418316,
+    "l_actual": 60478582,
+    "b_endpoint": 49131742,
+    "l_benchmark": 49131742,
+    "l_scenario": 49131742,
+    "r_actual": 0.4975,
+    "r_scenario": 0.40416,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 60478582,
+        "hypothetical": 49131742
+      }
+    ]
+  },
+  "camden": {
+    "label": "Camden County",
+    "fips": "37029",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 1817886573,
+    "act": 13275443,
+    "hyp": 9323342,
+    "cnt_diff": 3952101,
+    "pct_diff": 42.389317,
+    "savings_rate": 0.2463,
+    "savings_rate_fy26": 0.29770012194696627,
+    "l_actual": 13275443,
+    "b_endpoint": 9323342,
+    "l_benchmark": 9323342,
+    "l_scenario": 9323342,
+    "r_actual": 0.730268,
+    "r_scenario": 0.512867,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 13275443,
+        "hypothetical": 9323342
+      }
+    ]
+  },
+  "carteret": {
+    "label": "Carteret County",
+    "fips": "37031",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 31644682512,
+    "act": 72401908,
+    "hyp": 57129765,
+    "cnt_diff": 15272143,
+    "pct_diff": 26.732375,
+    "savings_rate": 0.0865,
+    "savings_rate_fy26": 0.21093564274576854,
+    "l_actual": 72401908,
+    "b_endpoint": 57129765,
+    "l_benchmark": 57129765,
+    "l_scenario": 57129765,
+    "r_actual": 0.228796,
+    "r_scenario": 0.180535,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 72401908,
+        "hypothetical": 57129765
+      }
+    ]
+  },
+  "caswell": {
+    "label": "Caswell County",
+    "fips": "37033",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2435459823,
+    "act": 15204067,
+    "hyp": 12046847,
+    "cnt_diff": 3157220,
+    "pct_diff": 26.207853,
+    "savings_rate": 0.1193,
+    "savings_rate_fy26": 0.2076562803886618,
+    "l_actual": 15204067,
+    "b_endpoint": 12046847,
+    "l_benchmark": 12046847,
+    "l_scenario": 12046847,
+    "r_actual": 0.624279,
+    "r_scenario": 0.494644,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 15204067,
+        "hypothetical": 12046847
+      }
+    ]
+  },
+  "catawba": {
+    "label": "Catawba County",
+    "fips": "37035",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 32409892902,
+    "act": 129220963,
+    "hyp": 114660167,
+    "cnt_diff": 14560796,
+    "pct_diff": 12.699088,
+    "savings_rate": 0.0809,
+    "savings_rate_fy26": 0.11268137662772254,
+    "l_actual": 129220963,
+    "b_endpoint": 114660167,
+    "l_benchmark": 114660167,
+    "l_scenario": 114660167,
+    "r_actual": 0.398708,
+    "r_scenario": 0.353781,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 129220963,
+        "hypothetical": 114660167
+      }
+    ]
+  },
+  "chatham": {
+    "label": "Chatham County",
+    "fips": "37037",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 22716432644,
+    "act": 137739646,
+    "hyp": 88650208,
+    "cnt_diff": 49089438,
+    "pct_diff": 55.374307,
+    "savings_rate": 0.2219,
+    "savings_rate_fy26": 0.35639294441050035,
+    "l_actual": 137739646,
+    "b_endpoint": 88650208,
+    "l_benchmark": 88650208,
+    "l_scenario": 88650208,
+    "r_actual": 0.606344,
+    "r_scenario": 0.390247,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 137739646,
+        "hypothetical": 88650208
+      }
+    ]
+  },
+  "cherokee": {
+    "label": "Cherokee County",
+    "fips": "37039",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 4290126844,
+    "act": 26187252,
+    "hyp": 17909239,
+    "cnt_diff": 8278013,
+    "pct_diff": 46.222025,
+    "savings_rate": 0.2812,
+    "savings_rate_fy26": 0.31610850195354595,
+    "l_actual": 26187252,
+    "b_endpoint": 17909239,
+    "l_benchmark": 17909239,
+    "l_scenario": 17909239,
+    "r_actual": 0.610407,
+    "r_scenario": 0.417452,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 26187252,
+        "hypothetical": 17909239
+      }
+    ]
+  },
+  "chowan": {
+    "label": "Chowan County",
+    "fips": "37041",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2656396695,
+    "act": 17323255,
+    "hyp": 11365493,
+    "cnt_diff": 5957762,
+    "pct_diff": 52.419741,
+    "savings_rate": 0.1778,
+    "savings_rate_fy26": 0.34391700635937067,
+    "l_actual": 17323255,
+    "b_endpoint": 11365493,
+    "l_benchmark": 11365493,
+    "l_scenario": 11365493,
+    "r_actual": 0.652134,
+    "r_scenario": 0.427854,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 17323255,
+        "hypothetical": 11365493
+      }
+    ]
+  },
+  "clay": {
+    "label": "Clay County",
+    "fips": "37043",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2274566422,
+    "act": 9784057,
+    "hyp": 9361774,
+    "cnt_diff": 422283,
+    "pct_diff": 4.510716,
+    "savings_rate": 0.0421,
+    "savings_rate_fy26": 0.04316031682971593,
+    "l_actual": 9784057,
+    "b_endpoint": 9361774,
+    "l_benchmark": 9361774,
+    "l_scenario": 9361774,
+    "r_actual": 0.43015,
+    "r_scenario": 0.411585,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 9784057,
+        "hypothetical": 9361774
+      }
+    ]
+  },
+  "cleveland": {
+    "label": "Cleveland County",
+    "fips": "37045",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 15261995928,
+    "act": 84507735,
+    "hyp": 69954966,
+    "cnt_diff": 14552769,
+    "pct_diff": 20.803053,
+    "savings_rate": 0.1005,
+    "savings_rate_fy26": 0.1722063548384062,
+    "l_actual": 84507735,
+    "b_endpoint": 69954966,
+    "l_benchmark": 69954966,
+    "l_scenario": 69954966,
+    "r_actual": 0.553714,
+    "r_scenario": 0.458361,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 84507735,
+        "hypothetical": 69954966
+      }
+    ]
+  },
+  "columbus": {
+    "label": "Columbus County",
+    "fips": "37047",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 4516623580,
+    "act": 36404978,
+    "hyp": 29884816,
+    "cnt_diff": 6520162,
+    "pct_diff": 21.817641,
+    "savings_rate": 0.1686,
+    "savings_rate_fy26": 0.1791008361548797,
+    "l_actual": 36404978,
+    "b_endpoint": 29884816,
+    "l_benchmark": 29884816,
+    "l_scenario": 29884816,
+    "r_actual": 0.806022,
+    "r_scenario": 0.661663,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 36404978,
+        "hypothetical": 29884816
+      }
+    ]
+  },
+  "craven": {
+    "label": "Craven County",
+    "fips": "37049",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 14823408594,
+    "act": 65977229,
+    "hyp": 57442937,
+    "cnt_diff": 8534292,
+    "pct_diff": 14.856991,
+    "savings_rate": 0.0934,
+    "savings_rate_fy26": 0.1293520829739606,
+    "l_actual": 65977229,
+    "b_endpoint": 57442937,
+    "l_benchmark": 57442937,
+    "l_scenario": 57442937,
+    "r_actual": 0.445088,
+    "r_scenario": 0.387515,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 65977229,
+        "hypothetical": 57442937
+      }
+    ]
+  },
+  "cumberland": {
+    "label": "Cumberland County",
+    "fips": "37051",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 40818103706,
+    "act": 212000554,
+    "hyp": 196257035,
+    "cnt_diff": 15743519,
+    "pct_diff": 8.021888,
+    "savings_rate": 0.0324,
+    "savings_rate_fy26": 0.0742616880142681,
+    "l_actual": 212000554,
+    "b_endpoint": 196257035,
+    "l_benchmark": 196257035,
+    "l_scenario": 196257035,
+    "r_actual": 0.519379,
+    "r_scenario": 0.480809,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 212000554,
+        "hypothetical": 196257035
+      }
+    ]
+  },
+  "currituck": {
+    "label": "Currituck County",
+    "fips": "37053",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 9227663891,
+    "act": 57237630,
+    "hyp": 38476170,
+    "cnt_diff": 18761460,
+    "pct_diff": 48.761246,
+    "savings_rate": 0.2365,
+    "savings_rate_fy26": 0.3277819154985977,
+    "l_actual": 57237630,
+    "b_endpoint": 38476170,
+    "l_benchmark": 38476170,
+    "l_scenario": 38476170,
+    "r_actual": 0.620283,
+    "r_scenario": 0.416965,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 57237630,
+        "hypothetical": 38476170
+      }
+    ]
+  },
+  "dare": {
+    "label": "Dare County",
+    "fips": "37055",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 28651238661,
+    "act": 76180697,
+    "hyp": 71214288,
+    "cnt_diff": 4966409,
+    "pct_diff": 6.973894,
+    "savings_rate": 0.0085,
+    "savings_rate_fy26": 0.06519248570277586,
+    "l_actual": 76180697,
+    "b_endpoint": 71214288,
+    "l_benchmark": 71214288,
+    "l_scenario": 71214288,
+    "r_actual": 0.26589,
+    "r_scenario": 0.248556,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 76180697,
+        "hypothetical": 71214288
+      }
+    ]
+  },
+  "davidson": {
+    "label": "Davidson County",
+    "fips": "37057",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 20082688456,
+    "act": 108446518,
+    "hyp": 87700556,
+    "cnt_diff": 20745962,
+    "pct_diff": 23.655451,
+    "savings_rate": 0.1575,
+    "savings_rate_fy26": 0.19130131960530075,
+    "l_actual": 108446518,
+    "b_endpoint": 87700556,
+    "l_benchmark": 87700556,
+    "l_scenario": 87700556,
+    "r_actual": 0.54,
+    "r_scenario": 0.436697,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 108446518,
+        "hypothetical": 87700556
+      }
+    ]
+  },
+  "davie": {
+    "label": "Davie County",
+    "fips": "37059",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 7955181304,
+    "act": 52091918,
+    "hyp": 37885282,
+    "cnt_diff": 14206636,
+    "pct_diff": 37.49909,
+    "savings_rate": 0.1545,
+    "savings_rate_fy26": 0.27272245955697005,
+    "l_actual": 52091918,
+    "b_endpoint": 37885282,
+    "l_benchmark": 37885282,
+    "l_scenario": 37885282,
+    "r_actual": 0.654817,
+    "r_scenario": 0.476234,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 52091918,
+        "hypothetical": 37885282
+      }
+    ]
+  },
+  "duplin": {
+    "label": "Duplin County",
+    "fips": "37061",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 7040257751,
+    "act": 41702475,
+    "hyp": 33945998,
+    "cnt_diff": 7756477,
+    "pct_diff": 22.849459,
+    "savings_rate": 0.1088,
+    "savings_rate_fy26": 0.18599560337845655,
+    "l_actual": 41702475,
+    "b_endpoint": 33945998,
+    "l_benchmark": 33945998,
+    "l_scenario": 33945998,
+    "r_actual": 0.592343,
+    "r_scenario": 0.48217,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 41702475,
+        "hypothetical": 33945998
+      }
+    ]
+  },
+  "durham": {
+    "label": "Durham County",
+    "fips": "37063",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 85900023146,
+    "act": 483021156,
+    "hyp": 342221368,
+    "cnt_diff": 140799788,
+    "pct_diff": 41.142898,
+    "savings_rate": 0.1642,
+    "savings_rate_fy26": 0.2914981802577608,
+    "l_actual": 483021156,
+    "b_endpoint": 342221368,
+    "l_benchmark": 342221368,
+    "l_scenario": 342221368,
+    "r_actual": 0.562306,
+    "r_scenario": 0.398395,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 483021156,
+        "hypothetical": 342221368
+      }
+    ]
+  },
+  "edgecombe": {
+    "label": "Edgecombe County",
+    "fips": "37065",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 4484571498,
+    "act": 39958224,
+    "hyp": 31979695,
+    "cnt_diff": 7978529,
+    "pct_diff": 24.948734,
+    "savings_rate": 0.1079,
+    "savings_rate_fy26": 0.1996717621884296,
+    "l_actual": 39958224,
+    "b_endpoint": 31979695,
+    "l_benchmark": 31979695,
+    "l_scenario": 31979695,
+    "r_actual": 0.891015,
+    "r_scenario": 0.713105,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 39958224,
+        "hypothetical": 31979695
+      }
+    ]
+  },
+  "forsyth": {
+    "label": "Forsyth County",
+    "fips": "37067",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 65804730764,
+    "act": 352186919,
+    "hyp": 297172128,
+    "cnt_diff": 55014791,
+    "pct_diff": 18.512769,
+    "savings_rate": 0.069,
+    "savings_rate_fy26": 0.15620906976388865,
+    "l_actual": 352186919,
+    "b_endpoint": 297172128,
+    "l_benchmark": 297172128,
+    "l_scenario": 297172128,
+    "r_actual": 0.5352,
+    "r_scenario": 0.451597,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 352186919,
+        "hypothetical": 297172128
+      }
+    ]
+  },
+  "franklin": {
+    "label": "Franklin County",
+    "fips": "37069",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 13336167553,
+    "act": 67453484,
+    "hyp": 60284630,
+    "cnt_diff": 7168854,
+    "pct_diff": 11.891678,
+    "savings_rate": 0.0845,
+    "savings_rate_fy26": 0.10627848370293223,
+    "l_actual": 67453484,
+    "b_endpoint": 60284630,
+    "l_benchmark": 60284630,
+    "l_scenario": 60284630,
+    "r_actual": 0.505794,
+    "r_scenario": 0.452039,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 67453484,
+        "hypothetical": 60284630
+      }
+    ]
+  },
+  "gaston": {
+    "label": "Gaston County",
+    "fips": "37071",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 35687843558,
+    "act": 213967202,
+    "hyp": 182624547,
+    "cnt_diff": 31342655,
+    "pct_diff": 17.162345,
+    "savings_rate": 0.0991,
+    "savings_rate_fy26": 0.14648345497362722,
+    "l_actual": 213967202,
+    "b_endpoint": 182624547,
+    "l_benchmark": 182624547,
+    "l_scenario": 182624547,
+    "r_actual": 0.599552,
+    "r_scenario": 0.511728,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 213967202,
+        "hypothetical": 182624547
+      }
+    ]
+  },
+  "gates": {
+    "label": "Gates County",
+    "fips": "37073",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 1372668628,
+    "act": 9398343,
+    "hyp": 7017027,
+    "cnt_diff": 2381316,
+    "pct_diff": 33.936252,
+    "savings_rate": 0.1615,
+    "savings_rate_fy26": 0.25337615364751,
+    "l_actual": 9398343,
+    "b_endpoint": 7017027,
+    "l_benchmark": 7017027,
+    "l_scenario": 7017027,
+    "r_actual": 0.684677,
+    "r_scenario": 0.511196,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 9398343,
+        "hypothetical": 7017027
+      }
+    ]
+  },
+  "graham": {
+    "label": "Graham County",
+    "fips": "37075",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 1704253704,
+    "act": 10059886,
+    "hyp": 7629249,
+    "cnt_diff": 2430637,
+    "pct_diff": 31.859453,
+    "savings_rate": 0.1645,
+    "savings_rate_fy26": 0.24161675390754925,
+    "l_actual": 10059886,
+    "b_endpoint": 7629249,
+    "l_benchmark": 7629249,
+    "l_scenario": 7629249,
+    "r_actual": 0.590281,
+    "r_scenario": 0.447659,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 10059886,
+        "hypothetical": 7629249
+      }
+    ]
+  },
+  "granville": {
+    "label": "Granville County",
+    "fips": "37077",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 8922035249,
+    "act": 56387275,
+    "hyp": 38439357,
+    "cnt_diff": 17947918,
+    "pct_diff": 46.691515,
+    "savings_rate": 0.2317,
+    "savings_rate_fy26": 0.3182973108737743,
+    "l_actual": 56387275,
+    "b_endpoint": 38439357,
+    "l_benchmark": 38439357,
+    "l_scenario": 38439357,
+    "r_actual": 0.632,
+    "r_scenario": 0.430836,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 56387275,
+        "hypothetical": 38439357
+      }
+    ]
+  },
+  "greene": {
+    "label": "Greene County",
+    "fips": "37079",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 1447656302,
+    "act": 11394277,
+    "hyp": 9174307,
+    "cnt_diff": 2219970,
+    "pct_diff": 24.197686,
+    "savings_rate": 0.1543,
+    "savings_rate_fy26": 0.19483201961826976,
+    "l_actual": 11394277,
+    "b_endpoint": 9174307,
+    "l_benchmark": 9174307,
+    "l_scenario": 9174307,
+    "r_actual": 0.787084,
+    "r_scenario": 0.633735,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 11394277,
+        "hypothetical": 9174307
+      }
+    ]
+  },
+  "guilford": {
+    "label": "Guilford County",
+    "fips": "37081",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 75161295696,
+    "act": 549532480,
+    "hyp": 404363438,
+    "cnt_diff": 145169042,
+    "pct_diff": 35.900635,
+    "savings_rate": 0.2092,
+    "savings_rate_fy26": 0.26416826535894655,
+    "l_actual": 549532480,
+    "b_endpoint": 404363438,
+    "l_benchmark": 404363438,
+    "l_scenario": 404363438,
+    "r_actual": 0.731138,
+    "r_scenario": 0.537994,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 549532480,
+        "hypothetical": 404363438
+      }
+    ]
+  },
+  "halifax": {
+    "label": "Halifax County",
+    "fips": "37083",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 5410701109,
+    "act": 37908378,
+    "hyp": 28773469,
+    "cnt_diff": 9134909,
+    "pct_diff": 31.74768,
+    "savings_rate": 0.1425,
+    "savings_rate_fy26": 0.2409733542279229,
+    "l_actual": 37908378,
+    "b_endpoint": 28773469,
+    "l_benchmark": 28773469,
+    "l_scenario": 28773469,
+    "r_actual": 0.700619,
+    "r_scenario": 0.531788,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 37908378,
+        "hypothetical": 28773469
+      }
+    ]
+  },
+  "harnett": {
+    "label": "Harnett County",
+    "fips": "37085",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 16084942722,
+    "act": 95167231,
+    "hyp": 75362459,
+    "cnt_diff": 19804772,
+    "pct_diff": 26.27936,
+    "savings_rate": 0.1597,
+    "savings_rate_fy26": 0.2081049515878002,
+    "l_actual": 95167231,
+    "b_endpoint": 75362459,
+    "l_benchmark": 75362459,
+    "l_scenario": 75362459,
+    "r_actual": 0.591654,
+    "r_scenario": 0.468528,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 95167231,
+        "hypothetical": 75362459
+      }
+    ]
+  },
+  "haywood": {
+    "label": "Haywood County",
+    "fips": "37087",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 10292447413,
+    "act": 56608462,
+    "hyp": 47004458,
+    "cnt_diff": 9604004,
+    "pct_diff": 20.432113,
+    "savings_rate": 0.1525,
+    "savings_rate_fy26": 0.1696566848963323,
+    "l_actual": 56608462,
+    "b_endpoint": 47004458,
+    "l_benchmark": 47004458,
+    "l_scenario": 47004458,
+    "r_actual": 0.55,
+    "r_scenario": 0.456689,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 56608462,
+        "hypothetical": 47004458
+      }
+    ]
+  },
+  "henderson": {
+    "label": "Henderson County",
+    "fips": "37089",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 25990621259,
+    "act": 112080007,
+    "hyp": 98261318,
+    "cnt_diff": 13818689,
+    "pct_diff": 14.063203,
+    "savings_rate": 0.0843,
+    "savings_rate_fy26": 0.12329307759589986,
+    "l_actual": 112080007,
+    "b_endpoint": 98261318,
+    "l_benchmark": 98261318,
+    "l_scenario": 98261318,
+    "r_actual": 0.431233,
+    "r_scenario": 0.378065,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 112080007,
+        "hypothetical": 98261318
+      }
+    ]
+  },
+  "hertford": {
+    "label": "Hertford County",
+    "fips": "37091",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 1913313906,
+    "act": 16091603,
+    "hyp": 12331839,
+    "cnt_diff": 3759764,
+    "pct_diff": 30.488267,
+    "savings_rate": 0.169,
+    "savings_rate_fy26": 0.23364757383089801,
+    "l_actual": 16091603,
+    "b_endpoint": 12331839,
+    "l_benchmark": 12331839,
+    "l_scenario": 12331839,
+    "r_actual": 0.841033,
+    "r_scenario": 0.644528,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 16091603,
+        "hypothetical": 12331839
+      }
+    ]
+  },
+  "hoke": {
+    "label": "Hoke County",
+    "fips": "37093",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 5306362664,
+    "act": 38736448,
+    "hyp": 30953765,
+    "cnt_diff": 7782683,
+    "pct_diff": 25.142928,
+    "savings_rate": 0.1386,
+    "savings_rate_fy26": 0.20091369761109742,
+    "l_actual": 38736448,
+    "b_endpoint": 30953765,
+    "l_benchmark": 30953765,
+    "l_scenario": 30953765,
+    "r_actual": 0.73,
+    "r_scenario": 0.583333,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 38736448,
+        "hypothetical": 30953765
+      }
+    ]
+  },
+  "hyde": {
+    "label": "Hyde County",
+    "fips": "37095",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 1404732462,
+    "act": 12768531,
+    "hyp": 7369319,
+    "cnt_diff": 5399212,
+    "pct_diff": 73.266091,
+    "savings_rate": 0.2914,
+    "savings_rate_fy26": 0.4228530282770978,
+    "l_actual": 12768531,
+    "b_endpoint": 7369319,
+    "l_benchmark": 7369319,
+    "l_scenario": 7369319,
+    "r_actual": 0.908965,
+    "r_scenario": 0.524607,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 12768531,
+        "hypothetical": 7369319
+      }
+    ]
+  },
+  "iredell": {
+    "label": "Iredell County",
+    "fips": "37097",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 44377519044,
+    "act": 222019214,
+    "hyp": 163783898,
+    "cnt_diff": 58235316,
+    "pct_diff": 35.556191,
+    "savings_rate": 0.1766,
+    "savings_rate_fy26": 0.2622985414226356,
+    "l_actual": 222019214,
+    "b_endpoint": 163783898,
+    "l_benchmark": 163783898,
+    "l_scenario": 163783898,
+    "r_actual": 0.500297,
+    "r_scenario": 0.36907,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 222019214,
+        "hypothetical": 163783898
+      }
+    ]
+  },
+  "jackson": {
+    "label": "Jackson County",
+    "fips": "37099",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 19611070471,
+    "act": 61118173,
+    "hyp": 38732499,
+    "cnt_diff": 22385674,
+    "pct_diff": 57.795584,
+    "savings_rate": 0.2246,
+    "savings_rate_fy26": 0.36626870374544734,
+    "l_actual": 61118173,
+    "b_endpoint": 38732499,
+    "l_benchmark": 38732499,
+    "l_scenario": 38732499,
+    "r_actual": 0.311651,
+    "r_scenario": 0.197503,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 61118173,
+        "hypothetical": 38732499
+      }
+    ]
+  },
+  "johnston": {
+    "label": "Johnston County",
+    "fips": "37101",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 44872868080,
+    "act": 237576684,
+    "hyp": 196587543,
+    "cnt_diff": 40989141,
+    "pct_diff": 20.850325,
+    "savings_rate": 0.0667,
+    "savings_rate_fy26": 0.17253015030717408,
+    "l_actual": 237576684,
+    "b_endpoint": 196587543,
+    "l_benchmark": 196587543,
+    "l_scenario": 196587543,
+    "r_actual": 0.529444,
+    "r_scenario": 0.438099,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 237576684,
+        "hypothetical": 196587543
+      }
+    ]
+  },
+  "jones": {
+    "label": "Jones County",
+    "fips": "37103",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 1221440110,
+    "act": 9045619,
+    "hyp": 6865947,
+    "cnt_diff": 2179672,
+    "pct_diff": 31.746123,
+    "savings_rate": 0.1863,
+    "savings_rate_fy26": 0.24096438286865718,
+    "l_actual": 9045619,
+    "b_endpoint": 6865947,
+    "l_benchmark": 6865947,
+    "l_scenario": 6865947,
+    "r_actual": 0.74057,
+    "r_scenario": 0.562119,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 9045619,
+        "hypothetical": 6865947
+      }
+    ]
+  },
+  "lee": {
+    "label": "Lee County",
+    "fips": "37105",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 10304180841,
+    "act": 67029974,
+    "hyp": 52304193,
+    "cnt_diff": 14725781,
+    "pct_diff": 28.154112,
+    "savings_rate": 0.1509,
+    "savings_rate_fy26": 0.21968949294236634,
+    "l_actual": 67029974,
+    "b_endpoint": 52304193,
+    "l_benchmark": 52304193,
+    "l_scenario": 52304193,
+    "r_actual": 0.650512,
+    "r_scenario": 0.507602,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 67029974,
+        "hypothetical": 52304193
+      }
+    ]
+  },
+  "lenoir": {
+    "label": "Lenoir County",
+    "fips": "37107",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 6707364122,
+    "act": 46253231,
+    "hyp": 34731853,
+    "cnt_diff": 11521378,
+    "pct_diff": 33.172368,
+    "savings_rate": 0.1278,
+    "savings_rate_fy26": 0.24909347414021737,
+    "l_actual": 46253231,
+    "b_endpoint": 34731853,
+    "l_benchmark": 34731853,
+    "l_scenario": 34731853,
+    "r_actual": 0.689589,
+    "r_scenario": 0.517817,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 46253231,
+        "hypothetical": 34731853
+      }
+    ]
+  },
+  "lincoln": {
+    "label": "Lincoln County",
+    "fips": "37109",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 20428324709,
+    "act": 102000844,
+    "hyp": 76645324,
+    "cnt_diff": 25355520,
+    "pct_diff": 33.081627,
+    "savings_rate": 0.1873,
+    "savings_rate_fy26": 0.24858147252193324,
+    "l_actual": 102000844,
+    "b_endpoint": 76645324,
+    "l_benchmark": 76645324,
+    "l_scenario": 76645324,
+    "r_actual": 0.499311,
+    "r_scenario": 0.375191,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 102000844,
+        "hypothetical": 76645324
+      }
+    ]
+  },
+  "macon": {
+    "label": "Macon County",
+    "fips": "37113",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 13585801288,
+    "act": 36693161,
+    "hyp": 32175607,
+    "cnt_diff": 4517554,
+    "pct_diff": 14.040307,
+    "savings_rate": 0.105,
+    "savings_rate_fy26": 0.12311705715405659,
+    "l_actual": 36693161,
+    "b_endpoint": 32175607,
+    "l_benchmark": 32175607,
+    "l_scenario": 32175607,
+    "r_actual": 0.270085,
+    "r_scenario": 0.236833,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 36693161,
+        "hypothetical": 32175607
+      }
+    ]
+  },
+  "madison": {
+    "label": "Madison County",
+    "fips": "37115",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 4771948550,
+    "act": 17195719,
+    "hyp": 14025282,
+    "cnt_diff": 3170437,
+    "pct_diff": 22.605157,
+    "savings_rate": 0.1056,
+    "savings_rate_fy26": 0.18437362229517706,
+    "l_actual": 17195719,
+    "b_endpoint": 14025282,
+    "l_benchmark": 14025282,
+    "l_scenario": 14025282,
+    "r_actual": 0.36035,
+    "r_scenario": 0.293911,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 17195719,
+        "hypothetical": 14025282
+      }
+    ]
+  },
+  "martin": {
+    "label": "Martin County",
+    "fips": "37117",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2756789047,
+    "act": 20052722,
+    "hyp": 15747651,
+    "cnt_diff": 4305071,
+    "pct_diff": 27.337861,
+    "savings_rate": 0.1079,
+    "savings_rate_fy26": 0.21468761198604358,
+    "l_actual": 20052722,
+    "b_endpoint": 15747651,
+    "l_benchmark": 15747651,
+    "l_scenario": 15747651,
+    "r_actual": 0.727394,
+    "r_scenario": 0.571232,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 20052722,
+        "hypothetical": 15747651
+      }
+    ]
+  },
+  "mcdowell": {
+    "label": "Mcdowell County",
+    "fips": "37111",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 6688660689,
+    "act": 37976438,
+    "hyp": 26696955,
+    "cnt_diff": 11279483,
+    "pct_diff": 42.250073,
+    "savings_rate": 0.2075,
+    "savings_rate_fy26": 0.2970126634836053,
+    "l_actual": 37976438,
+    "b_endpoint": 26696955,
+    "l_benchmark": 26696955,
+    "l_scenario": 26696955,
+    "r_actual": 0.567773,
+    "r_scenario": 0.399138,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 37976438,
+        "hypothetical": 26696955
+      }
+    ]
+  },
+  "mecklenburg": {
+    "label": "Mecklenburg County",
+    "fips": "37119",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 302954055682,
+    "act": 1492300028,
+    "hyp": 1276702407,
+    "cnt_diff": 215597621,
+    "pct_diff": 16.887069,
+    "savings_rate": 0.0904,
+    "savings_rate_fy26": 0.14447337462624507,
+    "l_actual": 1492300028,
+    "b_endpoint": 1276702407,
+    "l_benchmark": 1276702407,
+    "l_scenario": 1276702407,
+    "r_actual": 0.492583,
+    "r_scenario": 0.421418,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 1492300028,
+        "hypothetical": 1276702407
+      }
+    ]
+  },
+  "mitchell": {
+    "label": "Mitchell County",
+    "fips": "37121",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2601398734,
+    "act": 14567833,
+    "hyp": 10560593,
+    "cnt_diff": 4007240,
+    "pct_diff": 37.945218,
+    "savings_rate": 0.2135,
+    "savings_rate_fy26": 0.27507454265847225,
+    "l_actual": 14567833,
+    "b_endpoint": 10560593,
+    "l_benchmark": 10560593,
+    "l_scenario": 10560593,
+    "r_actual": 0.56,
+    "r_scenario": 0.405958,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 14567833,
+        "hypothetical": 10560593
+      }
+    ]
+  },
+  "montgomery": {
+    "label": "Montgomery County",
+    "fips": "37123",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 3951844601,
+    "act": 24325009,
+    "hyp": 22009154,
+    "cnt_diff": 2315855,
+    "pct_diff": 10.522235,
+    "savings_rate": 0.0734,
+    "savings_rate_fy26": 0.09520469242169653,
+    "l_actual": 24325009,
+    "b_endpoint": 22009154,
+    "l_benchmark": 22009154,
+    "l_scenario": 22009154,
+    "r_actual": 0.615536,
+    "r_scenario": 0.556934,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 24325009,
+        "hypothetical": 22009154
+      }
+    ]
+  },
+  "moore": {
+    "label": "Moore County",
+    "fips": "37125",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 23647846740,
+    "act": 70000523,
+    "hyp": 80727679,
+    "cnt_diff": -10727156,
+    "pct_diff": -13.288077,
+    "savings_rate": -0.0666,
+    "savings_rate_fy26": -0.1532439407631283,
+    "l_actual": 70000523,
+    "b_endpoint": 80727679,
+    "l_benchmark": 80727679,
+    "l_scenario": 70000523,
+    "r_actual": 0.296012,
+    "r_scenario": 0.296012,
+    "below_benchmark": true,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 70000523,
+        "hypothetical": 80727679
+      }
+    ]
+  },
+  "nash": {
+    "label": "Nash County",
+    "fips": "37127",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 12565503195,
+    "act": 79258414,
+    "hyp": 56583804,
+    "cnt_diff": 22674610,
+    "pct_diff": 40.072615,
+    "savings_rate": 0.1613,
+    "savings_rate_fy26": 0.2860845789823652,
+    "l_actual": 79258414,
+    "b_endpoint": 56583804,
+    "l_benchmark": 56583804,
+    "l_scenario": 56583804,
+    "r_actual": 0.630762,
+    "r_scenario": 0.450311,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 79258414,
+        "hypothetical": 56583804
+      }
+    ]
+  },
+  "new-hanover": {
+    "label": "New Hanover County",
+    "fips": "37129",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 80988112436,
+    "act": 251847898,
+    "hyp": 216889384,
+    "cnt_diff": 34958514,
+    "pct_diff": 16.118131,
+    "savings_rate": 0.1025,
+    "savings_rate_fy26": 0.13880804357557117,
+    "l_actual": 251847898,
+    "b_endpoint": 216889384,
+    "l_benchmark": 216889384,
+    "l_scenario": 216889384,
+    "r_actual": 0.310969,
+    "r_scenario": 0.267804,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 251847898,
+        "hypothetical": 216889384
+      }
+    ]
+  },
+  "northampton": {
+    "label": "Northampton County",
+    "fips": "37131",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2983573368,
+    "act": 24614180,
+    "hyp": 18696993,
+    "cnt_diff": 5917187,
+    "pct_diff": 31.6478,
+    "savings_rate": 0.1519,
+    "savings_rate_fy26": 0.24039748632698713,
+    "l_actual": 24614180,
+    "b_endpoint": 18696993,
+    "l_benchmark": 18696993,
+    "l_scenario": 18696993,
+    "r_actual": 0.82499,
+    "r_scenario": 0.626664,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 24614180,
+        "hypothetical": 18696993
+      }
+    ]
+  },
+  "onslow": {
+    "label": "Onslow County",
+    "fips": "37133",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 22479019300,
+    "act": 147363826,
+    "hyp": 110950440,
+    "cnt_diff": 36413386,
+    "pct_diff": 32.819506,
+    "savings_rate": 0.1974,
+    "savings_rate_fy26": 0.2470985382803511,
+    "l_actual": 147363826,
+    "b_endpoint": 110950440,
+    "l_benchmark": 110950440,
+    "l_scenario": 110950440,
+    "r_actual": 0.655562,
+    "r_scenario": 0.493573,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 147363826,
+        "hypothetical": 110950440
+      }
+    ]
+  },
+  "orange": {
+    "label": "Orange County",
+    "fips": "37135",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 33695281433,
+    "act": 218119292,
+    "hyp": 174281487,
+    "cnt_diff": 43837805,
+    "pct_diff": 25.153449,
+    "savings_rate": 0.1265,
+    "savings_rate_fy26": 0.20098086967933126,
+    "l_actual": 218119292,
+    "b_endpoint": 174281487,
+    "l_benchmark": 174281487,
+    "l_scenario": 174281487,
+    "r_actual": 0.647329,
+    "r_scenario": 0.517228,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 218119292,
+        "hypothetical": 174281487
+      }
+    ]
+  },
+  "pamlico": {
+    "label": "Pamlico County",
+    "fips": "37137",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2118380188,
+    "act": 13670778,
+    "hyp": 12398225,
+    "cnt_diff": 1272553,
+    "pct_diff": 10.263993,
+    "savings_rate": 0.0704,
+    "savings_rate_fy26": 0.09308563126399975,
+    "l_actual": 13670778,
+    "b_endpoint": 12398225,
+    "l_benchmark": 12398225,
+    "l_scenario": 12398225,
+    "r_actual": 0.645341,
+    "r_scenario": 0.585269,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 13670778,
+        "hypothetical": 12398225
+      }
+    ]
+  },
+  "pasquotank": {
+    "label": "Pasquotank County",
+    "fips": "37139",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 4718962245,
+    "act": 29276648,
+    "hyp": 26759314,
+    "cnt_diff": 2517334,
+    "pct_diff": 9.407319,
+    "savings_rate": 0.05,
+    "savings_rate_fy26": 0.08598436542325474,
+    "l_actual": 29276648,
+    "b_endpoint": 26759314,
+    "l_benchmark": 26759314,
+    "l_scenario": 26759314,
+    "r_actual": 0.620404,
+    "r_scenario": 0.567059,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 29276648,
+        "hypothetical": 26759314
+      }
+    ]
+  },
+  "pender": {
+    "label": "Pender County",
+    "fips": "37141",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 10434196388,
+    "act": 77033055,
+    "hyp": 58714548,
+    "cnt_diff": 18318507,
+    "pct_diff": 31.199264,
+    "savings_rate": 0.1695,
+    "savings_rate_fy26": 0.2378006039095814,
+    "l_actual": 77033055,
+    "b_endpoint": 58714548,
+    "l_benchmark": 58714548,
+    "l_scenario": 58714548,
+    "r_actual": 0.738275,
+    "r_scenario": 0.562713,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 77033055,
+        "hypothetical": 58714548
+      }
+    ]
+  },
+  "perquimans": {
+    "label": "Perquimans County",
+    "fips": "37143",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2406000152,
+    "act": 12521682,
+    "hyp": 10011805,
+    "cnt_diff": 2509877,
+    "pct_diff": 25.069176,
+    "savings_rate": 0.1415,
+    "savings_rate_fy26": 0.20044248049103947,
+    "l_actual": 12521682,
+    "b_endpoint": 10011805,
+    "l_benchmark": 10011805,
+    "l_scenario": 10011805,
+    "r_actual": 0.520436,
+    "r_scenario": 0.416118,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 12521682,
+        "hypothetical": 10011805
+      }
+    ]
+  },
+  "person": {
+    "label": "Person County",
+    "fips": "37145",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 7819835952,
+    "act": 49661752,
+    "hyp": 33609172,
+    "cnt_diff": 16052580,
+    "pct_diff": 47.762498,
+    "savings_rate": 0.1897,
+    "savings_rate_fy26": 0.32323829413025945,
+    "l_actual": 49661752,
+    "b_endpoint": 33609172,
+    "l_benchmark": 33609172,
+    "l_scenario": 33609172,
+    "r_actual": 0.635074,
+    "r_scenario": 0.429794,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 49661752,
+        "hypothetical": 33609172
+      }
+    ]
+  },
+  "pitt": {
+    "label": "Pitt County",
+    "fips": "37147",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 24131014296,
+    "act": 136841369,
+    "hyp": 109783305,
+    "cnt_diff": 27058064,
+    "pct_diff": 24.646793,
+    "savings_rate": 0.108,
+    "savings_rate_fy26": 0.19773307003381413,
+    "l_actual": 136841369,
+    "b_endpoint": 109783305,
+    "l_benchmark": 109783305,
+    "l_scenario": 109783305,
+    "r_actual": 0.567077,
+    "r_scenario": 0.454947,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 136841369,
+        "hypothetical": 109783305
+      }
+    ]
+  },
+  "polk": {
+    "label": "Polk County",
+    "fips": "37149",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 5331207111,
+    "act": 23058538,
+    "hyp": 17376175,
+    "cnt_diff": 5682363,
+    "pct_diff": 32.702036,
+    "savings_rate": 0.1468,
+    "savings_rate_fy26": 0.24643205913575267,
+    "l_actual": 23058538,
+    "b_endpoint": 17376175,
+    "l_benchmark": 17376175,
+    "l_scenario": 17376175,
+    "r_actual": 0.43252,
+    "r_scenario": 0.325933,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 23058538,
+        "hypothetical": 17376175
+      }
+    ]
+  },
+  "randolph": {
+    "label": "Randolph County",
+    "fips": "37151",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 20574848118,
+    "act": 102954030,
+    "hyp": 77721049,
+    "cnt_diff": 25232981,
+    "pct_diff": 32.466084,
+    "savings_rate": 0.1355,
+    "savings_rate_fy26": 0.24508978424642533,
+    "l_actual": 102954030,
+    "b_endpoint": 77721049,
+    "l_benchmark": 77721049,
+    "l_scenario": 77721049,
+    "r_actual": 0.500388,
+    "r_scenario": 0.377748,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 102954030,
+        "hypothetical": 77721049
+      }
+    ]
+  },
+  "richmond": {
+    "label": "Richmond County",
+    "fips": "37153",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 5055041440,
+    "act": 37017755,
+    "hyp": 32114757,
+    "cnt_diff": 4902998,
+    "pct_diff": 15.267118,
+    "savings_rate": 0.0237,
+    "savings_rate_fy26": 0.13244990140542018,
+    "l_actual": 37017755,
+    "b_endpoint": 32114757,
+    "l_benchmark": 32114757,
+    "l_scenario": 32114757,
+    "r_actual": 0.732294,
+    "r_scenario": 0.635302,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 37017755,
+        "hypothetical": 32114757
+      }
+    ]
+  },
+  "robeson": {
+    "label": "Robeson County",
+    "fips": "37155",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 9962746888,
+    "act": 74871261,
+    "hyp": 56716636,
+    "cnt_diff": 18154625,
+    "pct_diff": 32.009347,
+    "savings_rate": 0.1577,
+    "savings_rate_fy26": 0.24247788480549298,
+    "l_actual": 74871261,
+    "b_endpoint": 56716636,
+    "l_benchmark": 56716636,
+    "l_scenario": 56716636,
+    "r_actual": 0.751512,
+    "r_scenario": 0.569287,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 74871261,
+        "hypothetical": 56716636
+      }
+    ]
+  },
+  "rockingham": {
+    "label": "Rockingham County",
+    "fips": "37157",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 12818605931,
+    "act": 74442165,
+    "hyp": 55752601,
+    "cnt_diff": 18689564,
+    "pct_diff": 33.522318,
+    "savings_rate": 0.1507,
+    "savings_rate_fy26": 0.25106153213034577,
+    "l_actual": 74442165,
+    "b_endpoint": 55752601,
+    "l_benchmark": 55752601,
+    "l_scenario": 55752601,
+    "r_actual": 0.580735,
+    "r_scenario": 0.434935,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 74442165,
+        "hypothetical": 55752601
+      }
+    ]
+  },
+  "rowan": {
+    "label": "Rowan County",
+    "fips": "37159",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 21643877753,
+    "act": 125620537,
+    "hyp": 96869082,
+    "cnt_diff": 28751455,
+    "pct_diff": 29.680734,
+    "savings_rate": 0.1442,
+    "savings_rate_fy26": 0.2288754345955391,
+    "l_actual": 125620537,
+    "b_endpoint": 96869082,
+    "l_benchmark": 96869082,
+    "l_scenario": 96869082,
+    "r_actual": 0.580398,
+    "r_scenario": 0.447559,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 125620537,
+        "hypothetical": 96869082
+      }
+    ]
+  },
+  "rutherford": {
+    "label": "Rutherford County",
+    "fips": "37161",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 11411024102,
+    "act": 51823099,
+    "hyp": 46669522,
+    "cnt_diff": 5153577,
+    "pct_diff": 11.042704,
+    "savings_rate": 0.0664,
+    "savings_rate_fy26": 0.09944555805124661,
+    "l_actual": 51823099,
+    "b_endpoint": 46669522,
+    "l_benchmark": 46669522,
+    "l_scenario": 46669522,
+    "r_actual": 0.454149,
+    "r_scenario": 0.408986,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 51823099,
+        "hypothetical": 46669522
+      }
+    ]
+  },
+  "sampson": {
+    "label": "Sampson County",
+    "fips": "37163",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 7251924968,
+    "act": 49370252,
+    "hyp": 41578562,
+    "cnt_diff": 7791690,
+    "pct_diff": 18.739681,
+    "savings_rate": 0.0853,
+    "savings_rate_fy26": 0.157821556187317,
+    "l_actual": 49370252,
+    "b_endpoint": 41578562,
+    "l_benchmark": 41578562,
+    "l_scenario": 41578562,
+    "r_actual": 0.680788,
+    "r_scenario": 0.573345,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 49370252,
+        "hypothetical": 41578562
+      }
+    ]
+  },
+  "scotland": {
+    "label": "Scotland County",
+    "fips": "37165",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2708761750,
+    "act": 26851303,
+    "hyp": 22344803,
+    "cnt_diff": 4506500,
+    "pct_diff": 20.168001,
+    "savings_rate": 0.1243,
+    "savings_rate_fy26": 0.16783170634214659,
+    "l_actual": 26851303,
+    "b_endpoint": 22344803,
+    "l_benchmark": 22344803,
+    "l_scenario": 22344803,
+    "r_actual": 0.991276,
+    "r_scenario": 0.824908,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 26851303,
+        "hypothetical": 22344803
+      }
+    ]
+  },
+  "stanly": {
+    "label": "Stanly County",
+    "fips": "37167",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 9759965469,
+    "act": 50581133,
+    "hyp": 37191524,
+    "cnt_diff": 13389609,
+    "pct_diff": 36.001776,
+    "savings_rate": 0.1742,
+    "savings_rate_fy26": 0.26471548195648364,
+    "l_actual": 50581133,
+    "b_endpoint": 37191524,
+    "l_benchmark": 37191524,
+    "l_scenario": 37191524,
+    "r_actual": 0.518251,
+    "r_scenario": 0.381062,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 50581133,
+        "hypothetical": 37191524
+      }
+    ]
+  },
+  "stokes": {
+    "label": "Stokes County",
+    "fips": "37169",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 6683095669,
+    "act": 41907181,
+    "hyp": 28423679,
+    "cnt_diff": 13483502,
+    "pct_diff": 47.437568,
+    "savings_rate": 0.1959,
+    "savings_rate_fy26": 0.3217468147046207,
+    "l_actual": 41907181,
+    "b_endpoint": 28423679,
+    "l_benchmark": 28423679,
+    "l_scenario": 28423679,
+    "r_actual": 0.627062,
+    "r_scenario": 0.425307,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 41907181,
+        "hypothetical": 28423679
+      }
+    ]
+  },
+  "surry": {
+    "label": "Surry County",
+    "fips": "37171",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 9171681548,
+    "act": 47367745,
+    "hyp": 37090381,
+    "cnt_diff": 10277364,
+    "pct_diff": 27.708974,
+    "savings_rate": 0.1356,
+    "savings_rate_fy26": 0.21696966997267866,
+    "l_actual": 47367745,
+    "b_endpoint": 37090381,
+    "l_benchmark": 37090381,
+    "l_scenario": 37090381,
+    "r_actual": 0.516456,
+    "r_scenario": 0.404401,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 47367745,
+        "hypothetical": 37090381
+      }
+    ]
+  },
+  "swain": {
+    "label": "Swain County",
+    "fips": "37173",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 2138174616,
+    "act": 8767851,
+    "hyp": 5952435,
+    "cnt_diff": 2815416,
+    "pct_diff": 47.298559,
+    "savings_rate": 0.236,
+    "savings_rate_fy26": 0.3211067341358789,
+    "l_actual": 8767851,
+    "b_endpoint": 5952435,
+    "l_benchmark": 5952435,
+    "l_scenario": 5952435,
+    "r_actual": 0.410062,
+    "r_scenario": 0.278389,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 8767851,
+        "hypothetical": 5952435
+      }
+    ]
+  },
+  "transylvania": {
+    "label": "Transylvania County",
+    "fips": "37175",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 12054183992,
+    "act": 50190923,
+    "hyp": 39122991,
+    "cnt_diff": 11067932,
+    "pct_diff": 28.290097,
+    "savings_rate": 0.1371,
+    "savings_rate_fy26": 0.22051660616004212,
+    "l_actual": 50190923,
+    "b_endpoint": 39122991,
+    "l_benchmark": 39122991,
+    "l_scenario": 39122991,
+    "r_actual": 0.416378,
+    "r_scenario": 0.324559,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 50190923,
+        "hypothetical": 39122991
+      }
+    ]
+  },
+  "tyrrell": {
+    "label": "Tyrrell County",
+    "fips": "37177",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 562155608,
+    "act": 4920671,
+    "hyp": 3958167,
+    "cnt_diff": 962504,
+    "pct_diff": 24.316912,
+    "savings_rate": 0.1248,
+    "savings_rate_fy26": 0.1956042173923028,
+    "l_actual": 4920671,
+    "b_endpoint": 3958167,
+    "l_benchmark": 3958167,
+    "l_scenario": 3958167,
+    "r_actual": 0.875322,
+    "r_scenario": 0.704105,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 4920671,
+        "hypothetical": 3958167
+      }
+    ]
+  },
+  "union": {
+    "label": "Union County",
+    "fips": "37179",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 62771098102,
+    "act": 277899273,
+    "hyp": 229780229,
+    "cnt_diff": 48119044,
+    "pct_diff": 20.941333,
+    "savings_rate": 0.0875,
+    "savings_rate_fy26": 0.17315282433286538,
+    "l_actual": 277899273,
+    "b_endpoint": 229780229,
+    "l_benchmark": 229780229,
+    "l_scenario": 229780229,
+    "r_actual": 0.442719,
+    "r_scenario": 0.366061,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 277899273,
+        "hypothetical": 229780229
+      }
+    ]
+  },
+  "vance": {
+    "label": "Vance County",
+    "fips": "37181",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 4836650515,
+    "act": 34480481,
+    "hyp": 24333617,
+    "cnt_diff": 10146864,
+    "pct_diff": 41.698955,
+    "savings_rate": 0.1741,
+    "savings_rate_fy26": 0.2942784933887668,
+    "l_actual": 34480481,
+    "b_endpoint": 24333617,
+    "l_benchmark": 24333617,
+    "l_scenario": 24333617,
+    "r_actual": 0.7129,
+    "r_scenario": 0.503109,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 34480481,
+        "hypothetical": 24333617
+      }
+    ]
+  },
+  "wake": {
+    "label": "Wake County",
+    "fips": "37183",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 311698513683,
+    "act": 1612589315,
+    "hyp": 1264554241,
+    "cnt_diff": 348035074,
+    "pct_diff": 27.522352,
+    "savings_rate": 0.1316,
+    "savings_rate_fy26": 0.21582375051269642,
+    "l_actual": 1612589315,
+    "b_endpoint": 1264554241,
+    "l_benchmark": 1264554241,
+    "l_scenario": 1264554241,
+    "r_actual": 0.517355,
+    "r_scenario": 0.405698,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 1612589315,
+        "hypothetical": 1264554241
+      }
+    ]
+  },
+  "warren": {
+    "label": "Warren County",
+    "fips": "37185",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 5008921574,
+    "act": 29571944,
+    "hyp": 20243407,
+    "cnt_diff": 9328537,
+    "pct_diff": 46.081853,
+    "savings_rate": 0.1534,
+    "savings_rate_fy26": 0.31545227462895237,
+    "l_actual": 29571944,
+    "b_endpoint": 20243407,
+    "l_benchmark": 20243407,
+    "l_scenario": 20243407,
+    "r_actual": 0.590385,
+    "r_scenario": 0.404147,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 29571944,
+        "hypothetical": 20243407
+      }
+    ]
+  },
+  "washington": {
+    "label": "Washington County",
+    "fips": "37187",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 1065615957,
+    "act": 9065390,
+    "hyp": 7991676,
+    "cnt_diff": 1073714,
+    "pct_diff": 13.435405,
+    "savings_rate": 0.0664,
+    "savings_rate_fy26": 0.11844101577538307,
+    "l_actual": 9065390,
+    "b_endpoint": 7991676,
+    "l_benchmark": 7991676,
+    "l_scenario": 7991676,
+    "r_actual": 0.850718,
+    "r_scenario": 0.749958,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 9065390,
+        "hypothetical": 7991676
+      }
+    ]
+  },
+  "watauga": {
+    "label": "Watauga County",
+    "fips": "37189",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 15173462466,
+    "act": 48265529,
+    "hyp": 39487486,
+    "cnt_diff": 8778043,
+    "pct_diff": 22.229936,
+    "savings_rate": 0.134,
+    "savings_rate_fy26": 0.18186981851996276,
+    "l_actual": 48265529,
+    "b_endpoint": 39487486,
+    "l_benchmark": 39487486,
+    "l_scenario": 39487486,
+    "r_actual": 0.318092,
+    "r_scenario": 0.26024,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 48265529,
+        "hypothetical": 39487486
+      }
+    ]
+  },
+  "wayne": {
+    "label": "Wayne County",
+    "fips": "37191",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 13748358150,
+    "act": 87663085,
+    "hyp": 60421164,
+    "cnt_diff": 27241921,
+    "pct_diff": 45.08672,
+    "savings_rate": 0.1912,
+    "savings_rate_fy26": 0.3107570421460755,
+    "l_actual": 87663085,
+    "b_endpoint": 60421164,
+    "l_benchmark": 60421164,
+    "l_scenario": 60421164,
+    "r_actual": 0.637626,
+    "r_scenario": 0.439479,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 87663085,
+        "hypothetical": 60421164
+      }
+    ]
+  },
+  "wilkes": {
+    "label": "Wilkes County",
+    "fips": "37193",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 10319038032,
+    "act": 44969142,
+    "hyp": 38562104,
+    "cnt_diff": 6407038,
+    "pct_diff": 16.614856,
+    "savings_rate": 0.0884,
+    "savings_rate_fy26": 0.14247632298610455,
+    "l_actual": 44969142,
+    "b_endpoint": 38562104,
+    "l_benchmark": 38562104,
+    "l_scenario": 38562104,
+    "r_actual": 0.435788,
+    "r_scenario": 0.373699,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 44969142,
+        "hypothetical": 38562104
+      }
+    ]
+  },
+  "wilson": {
+    "label": "Wilson County",
+    "fips": "37195",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 11561896006,
+    "act": 68877970,
+    "hyp": 55672834,
+    "cnt_diff": 13205136,
+    "pct_diff": 23.719173,
+    "savings_rate": 0.1189,
+    "savings_rate_fy26": 0.19171784534300298,
+    "l_actual": 68877970,
+    "b_endpoint": 55672834,
+    "l_benchmark": 55672834,
+    "l_scenario": 55672834,
+    "r_actual": 0.595732,
+    "r_scenario": 0.48152,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 68877970,
+        "hypothetical": 55672834
+      }
+    ]
+  },
+  "yadkin": {
+    "label": "Yadkin County",
+    "fips": "37197",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 4400246130,
+    "act": 28627039,
+    "hyp": 21033350,
+    "cnt_diff": 7593689,
+    "pct_diff": 36.103089,
+    "savings_rate": 0.173,
+    "savings_rate_fy26": 0.2652628167377003,
+    "l_actual": 28627039,
+    "b_endpoint": 21033350,
+    "l_benchmark": 21033350,
+    "l_scenario": 21033350,
+    "r_actual": 0.650578,
+    "r_scenario": 0.478004,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 28627039,
+        "hypothetical": 21033350
+      }
+    ]
+  },
+  "yancey": {
+    "label": "Yancey County",
+    "fips": "37199",
+    "baseline_year": 2019,
+    "period": "FY2025-26",
+    "x": 3950196682,
+    "act": 20743170,
+    "hyp": 14360717,
+    "cnt_diff": 6382453,
+    "pct_diff": 44.443832,
+    "savings_rate": 0.1765,
+    "savings_rate_fy26": 0.3076893743820255,
+    "l_actual": 20743170,
+    "b_endpoint": 14360717,
+    "l_benchmark": 14360717,
+    "l_scenario": 14360717,
+    "r_actual": 0.525117,
+    "r_scenario": 0.363544,
+    "below_benchmark": false,
+    "by_year": [
+      {
+        "fy": "2025-26",
+        "actual": 20743170,
+        "hypothetical": 14360717
+      }
+    ]
+  }
+}

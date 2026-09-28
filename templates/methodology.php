@@ -1,0 +1,138 @@
+<?php
+/**
+ * Long-form Methodology Notes, rendered by [ptx_methodology].
+ *
+ * Ported from the live demo's docs/methodology.html. The demo shipped this as
+ * a standalone print-styled document; here it is page content, so the print
+ * stylesheet became the scoped .ptx-doc block in assets/css/ptx.css and the
+ * document's own <html>/<head>/<body> chrome is dropped in favour of the
+ * theme's.
+ *
+ * Body copy, formulas, table rows and caveats are the demo's, unchanged.
+ */
+
+defined('ABSPATH') || exit;
+
+$ptx_repo = apply_filters(
+    'ptx_methodology_repo',
+    'Repo: github.com/johnlockefoundation/property-tax-demo &middot; Calculation contract implemented in <code>calc.js</code> (<code>PT.computeReceipt</code>) and covered by <code>test/calc.test.mjs</code>.'
+);
+?>
+<div class="ptx-doc">
+  <div class="ptx-doc-hd">
+    <h1>NC Property Tax Demo &mdash; Methodology Notes</h1>
+    <p class="ptx-doc-subtitle">Per-property comparison under HB 1089: data sources, benchmark construction, and calculation contract</p>
+    <p class="ptx-doc-meta">Version 2.0 &middot; September 2026 &middot; North Carolina fiscal years 2020&#8211;21 through 2025&#8211;26</p>
+  </div>
+
+  <h2>1. Purpose</h2>
+  <p>
+    This document describes how the per-property tax comparison on the site is constructed. For a
+    selected residential parcel, the page compares the county property tax actually paid in a single
+    fiscal year, FY2025&#8211;26, with what it would have been had the county&#8217;s levy been limited to
+    <a href="https://www.johnlocke.org/model-legislation-how-north-carolinas-property-tax-levy-limit-needs-to-be-designed/" target="_blank" rel="noopener">HB 1089</a>:
+    a bankable levy limit anchored to the actual FY2020&#8211;21 levy and compounded thereafter by
+    population growth plus inflation.
+  </p>
+  <p>
+    The comparison holds the parcel&#8217;s assessed value constant and applies only the county&#8217;s
+    published savings rate, so the result isolates the effect of <em>county rate growth</em> relative
+    to the population-plus-inflation benchmark. County-wide property tax only is compared; municipal,
+    school, and special district taxes are out of scope.
+  </p>
+
+  <h2>2. Data sources</h2>
+  <table>
+    <thead>
+      <tr><th style="width:26%">Input</th><th style="width:34%">Source</th><th>Used for</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>County-wide autonomous levies, FY2020&#8211;21 to FY2025&#8211;26 <code>act</code></td><td>NCDOR LG04 (total property tax levied by all local jurisdictions</td><td>Anchor &amp; actuals</td></tr>
+      <tr><td>County population estimates, 2019&#8211;2024</td><td>OSBM Certified County Population Estimates</td><td>Benchmark growth component</td></tr>
+      <tr><td>Inflation, 2019&#8211;2024</td><td>BLS/U.S. South urban CPI (FRED CUUR0300SA0)</td><td>Benchmark growth component</td></tr>
+      <tr><td>FY2025&#8211;26 taxable base <code>x</code></td><td>NCDOR LG04 (total assessed valuation)</td><td>Scaled &#8220;what you paid&#8221;</td></tr>
+      <tr><td>5-year savings rate <code>s</code></td><td>Derived; column Q of <code>Data(tax).csv</code></td><td>Percent lower on the receipt</td></tr>
+      <tr><td>Parcel assessed value <code>V</code></td><td>NC OneMap parcel point service</td><td>Per-property bill</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. Benchmark construction (research methodology)</h2>
+  <p>
+    The hypothetical levy compounds from the FY2020&#8211;21 actual county levy:
+  </p>
+  <div class="ptx-doc-formula">
+    hyp_t = hyp_(t&#8722;1) &#215; (1 + population_growth_t + inflation_t)&#160;&#160;&#160;&#160;for t = FY2021&#8211;22, &#8230;, FY2025&#8211;26, with hyp_0 = FY2020&#8211;21 actual
+  </div>
+  <p>
+    Each subsequent year&#8217;s hypothetical levy uses the <em>previous year&#8217;s hypothetical</em> levy
+    rather than the actual levy, so the limit compounds over the five-year period. <code>population_growth_t</code>
+    is the county&#8217;s annual certified population change (2019&#8594;2020, 2020&#8594;2021, &#8230;, 2023&#8594;2024);
+    <code>inflation_t</code> is the corresponding annual change in the U.S. South urban CPI. Municipal and
+    special-district levies are excluded, so the county levies are comparable to a county-wide limit.
+  </p>
+
+  <h3>3.1 Five-year savings rate</h3>
+  <p>Actual and hypothetical levies are accumulated over FY2021&#8211;22 through FY2025&#8211;26:</p>
+  <div class="ptx-doc-formula">
+    savings_rate = (&#931; actual &#8722; &#931; hypothetical) / &#931; actual
+  </div>
+  <p>
+    Counties at or below the benchmark have a non-positive rate (a grade of A) and are treated as
+    &#8220;no savings&#8221; on the site. All 100 counties&#8217; computed columns, including this rate, are
+    recorded in <code>Data(tax).csv</code>; column Q (<code>5-year_savings_rate</code>) is the number
+    the receipt displays as &#8220;percent lower&#8221;.
+  </p>
+
+  <h3>3.2 Per-property receipt</h3>
+  <div class="ptx-doc-formula">
+    paid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = V &#215; act / x<br/>
+    could_have&nbsp; = paid &#215; (1 &#8722; savings_rate)<br/>
+    saved&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = paid &#215; savings_rate
+  </div>
+  <p>
+    <code>act</code> is the county&#8217;s FY2025&#8211;26 actual county-wide levy and <code>x</code> its
+    FY2025&#8211;26 assessed valuation base, so <code>paid</code> is the bill the parcel really faced.
+    Because <code>could_have</code> and <code>saved</code> are scaled from <code>paid</code> by the published
+    rate, the dollar values always agree with the printed percentage.
+  </p>
+
+  <h2>4. Comparison window</h2>
+  <p>
+    The receipt compares one fiscal year (FY2025&#8211;26), not the five-year sum. A parcel&#8217;s assessment
+    can shift relative to the county tax base over time, so summing years would require assuming the parcel
+    maintains a fixed share of the county base. Comparing the single current year on the current assessment
+    avoids that assumption. The <em>rate</em> shown is the five-year measure from the methodology; the
+    <em>bill</em> shown is single-year.
+  </p>
+
+  <h2>5. Below-benchmark counties</h2>
+  <p>
+    A county is flagged below benchmark when its FY2025&#8211;26 actual levy does not exceed the hypothetical
+    levy (<code>act26 &#8804; hyp26</code>). In that case the site shows a short explanation (&#8220;would not
+    have saved anything&#8221;) instead of a receipt. As of this version the flagged counties are
+    <strong>Alamance and Moore</strong>.
+  </p>
+
+  <h2>6. Reconciliation &amp; data notes</h2>
+  <ul>
+    <li><b>Bills scale with assessed value.</b> The receipt is <code>V</code>-proportional; a parcel with
+    twice the assessed value sees twice the paid/could-have/saved dollars from the same rate.</li>
+    <li><b>Parcel values.</b> NC OneMap parcel data is a live snapshot and may predate the 2025 tax year.
+    The county levy and rate figures are the official FY2025&#8211;26 records.</li>
+    <li><b>Residential only.</b> Relief/exemption cases and non-residential parcels are out of scope.</li>
+    <li><b>Build inputs.</b> <code>Data(tax).csv</code>, the LG04 valuation, and the FIPS map are vendored
+    under <code>data/source/</code> in the source repository; <code>node tools/build_benchmarks.mjs</code>
+    regenerates <code>data/benchmarks.json</code>.</li>
+  </ul>
+
+  <h2>7. Caveats</h2>
+  <p>
+    This is an estimate based on historical tax and property data plus a hypothetical policy scenario. It is
+    not an official tax assessment. The FY2025&#8211;26 figures and the underlying population
+    (2019&#8211;2024) and inflation (2019&#8211;2024) series are subject to the sources&#8217; revisions.
+  </p>
+
+  <div class="ptx-doc-footer">
+    <?php echo wp_kses_post($ptx_repo); ?>
+  </div>
+</div>

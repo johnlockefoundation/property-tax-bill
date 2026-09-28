@@ -1,0 +1,18 @@
+{
+  "name": "nc-property-tax-bill",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Test harness for the NC Property Tax Bill WordPress plugin. The plugin itself ships no JavaScript dependencies; jsdom is used only to drive the rendered markup in tests.",
+  "scripts": {
+    "test": "node --test tests/parity.test.mjs tests/render.test.mjs && php tests/render-smoke.php",
+    "test:parity": "node --test tests/parity.test.mjs",
+    "test:render": "node --test tests/render.test.mjs",
+    "test:php": "php tests/render-smoke.php",
+    "test:upstream": "node --test ../property-tax-demo/test/calc.test.mjs",
+    "build": "bash tools/build.sh",
+    "verify": "bash tools/build.sh"
+  },
+  "devDependencies": {
+    "jsdom": "^29.0.0"
+  }
+}
