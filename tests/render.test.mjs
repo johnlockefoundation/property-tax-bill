@@ -405,6 +405,75 @@ for (const slug of ["alamance", "moore"]) {
 }
 
 /* ---------------------------------------------------------------------------
+ * Counties with no published site address: no receipt is possible, so the
+ * county-level savings rate is reported instead of a dead end.
+ * ------------------------------------------------------------------------ */
+
+for (const slug of ["hoke", "perquimans", "richmond"]) {
+  test(`${BENCHMARKS[slug].label} reports the county-level rate instead of a receipt`, async () => {
+    const c = BENCHMARKS[slug];
+    const { doc, settle, window } = boot();
+    await settle();
+    const r = root(doc);
+
+    $(r, ".ptx-select").value = slug;
+    $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+    await settle();
+
+    const name = c.label.replace(/ County$/, "");
+    const pct = Math.round(c.savings_rate * 100);
+    assert.equal(
+      $(r, ".ptx-below").textContent,
+      `We do not have individual parcel data for ${name} County, so we cannot print a ` +
+      `receipt for your property. Our county-level analysis estimates that a property tax ` +
+      `levy limit would have lowered property tax bills across ${name} County by about ` +
+      `${pct}% over the five years to ${c.period}.`
+    );
+    assert.ok(!$(r, ".ptx-below").classList.contains("ptx-hidden"), "message shown");
+    assert.ok($(r, ".ptx-below").classList.contains("ptx-below-note"), "sentence case, not banner case");
+    assert.ok($(r, ".ptx-receipt").classList.contains("ptx-hidden"), "no receipt");
+    assert.ok($(r, ".ptx-address-body").classList.contains("ptx-hidden"), "no dollar figures");
+    // No address search should be needed or attempted.
+    assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 0);
+  });
+}
+
+test("switching away from a county-level-only county clears the message", async () => {
+  const { doc, settle, window } = boot();
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "hoke";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  await settle();
+  assert.ok(!$(r, ".ptx-below").classList.contains("ptx-hidden"), "shown for Hoke");
+
+  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  await settle();
+  assert.ok($(r, ".ptx-below").classList.contains("ptx-hidden"), "cleared for Mecklenburg");
+  assert.ok(!$(r, ".ptx-below").classList.contains("ptx-below-note"), "the modifier is not left behind");
+  assert.ok(!$(r, ".ptx-receipt-instruction").classList.contains("ptx-hidden"), "the receipt prompt returns");
+});
+
+test("a normal county still gets the receipt flow, not the county message", async () => {
+  const { doc, settle, window } = boot();
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  await settle();
+  assert.ok($(r, ".ptx-below").classList.contains("ptx-hidden"), "no county-level message");
+
+  $(r, ".ptx-input").value = "1000 E Woodlawn Rd";
+  $(r, ".ptx-btn").click();
+  await settle();
+  $(r, ".ptx-cands").querySelector("li").click();
+  assert.notEqual($(r, ".ptx-amt-saved").textContent, "$0.00", "receipt still computes");
+});
+
+/* ---------------------------------------------------------------------------
  * Non-residential and empty results
  * ------------------------------------------------------------------------ */
 

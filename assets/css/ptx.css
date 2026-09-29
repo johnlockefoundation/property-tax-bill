@@ -431,6 +431,14 @@
   line-height: 1.6;
 }
 
+/* The county-level message is a sentence or two, so it drops the banner's
+   uppercase display face for ordinary sentence case. */
+.ptx-below-note {
+  text-transform: none;
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
 /* --- methodology disclosure -------------------------------------------- */
 
 .ptx-method {

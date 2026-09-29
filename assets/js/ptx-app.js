@@ -85,6 +85,7 @@
   Bill.prototype.clearBill = function () {
     this.el.results.classList.remove("ptx-hidden");
     this.el.below.classList.add("ptx-hidden");
+    this.el.below.classList.remove("ptx-below-note");
     this.el.bill.classList.remove("ptx-hidden");
     this.el.brand.classList.add("ptx-hidden");
     this.el.instruction.classList.remove("ptx-hidden");
@@ -95,6 +96,27 @@
     this.selected = key || null;
     this.county = key ? this.benchmarks[key] : null;
     this.clearBill();
+    this.showCountyLevel();
+  };
+
+  // Counties with no site address in the state parcel service cannot be
+  // matched to an individual parcel, so no receipt can be printed. The
+  // county-level savings rate is published for every county, so the reader
+  // still gets the finding rather than a dead end.
+  Bill.prototype.showCountyLevel = function () {
+    if (!this.county || PT.hasParcelAddress(this.county)) return;
+    var nm = this.county.label.replace(/ County$/, "");
+    var pct = Math.round(this.county.savings_rate * 100);
+    var msg = "We do not have individual parcel data for " + nm +
+      " County, so we cannot print a receipt for your property. Our county-level " +
+      "analysis estimates that a property tax levy limit would have lowered property " +
+      "tax bills across " + nm + " County by about " + pct +
+      "% over the five years to " + this.county.period + ".";
+    this.el.below.textContent = msg;
+    this.el.below.classList.add("ptx-below-note");
+    this.el.below.classList.remove("ptx-hidden");
+    this.el.bill.classList.add("ptx-hidden");
+    this.el.results.classList.remove("ptx-hidden");
   };
 
   Bill.prototype.clearAddress = function () {
