@@ -41,7 +41,7 @@ invalidates CDN and page caches without a version bump.
 
 ## What is on the page
 
-Enter a North Carolina address, pick the matching residential parcel, and the tool prints
+Enter your address, pick the matching residential parcel, and the tool prints
 a receipt for **FY2025-26**: what you paid, what you could have paid, and what you could
 have saved, as dollars and as a percent.
 
@@ -50,6 +50,20 @@ district taxes are out of scope, and the receipt says so.
 
 Two counties (Alamance, Moore) are at or below the benchmark and get an explanation
 instead of a receipt.
+
+### Where a receipt is not possible
+
+For 96 of the 100 counties the reader gets a receipt for their parcel. Four do not, and
+the tool says so rather than reporting a failed search:
+
+| Situation | Counties | What the reader gets |
+| --- | --- | --- |
+| No parcel address is published anywhere the tool can reach | Franklin, Hoke, Perquimans, Richmond | The county's savings rate, and why there is no receipt |
+| Published, but only in a form the tool cannot rely on | — | — |
+| Apartment blocks rather than an ordinary residence | any county, by parcel | No match |
+
+The four are decided by FIPS in `calc.js`, so a county moving between lists is a one-line
+change. The reader's address is never stored; see the note under the search box.
 
 ## Methodology
 
@@ -133,8 +147,8 @@ All optional; the defaults are the demo's copy.
 
 | Attribute | Default | Notes |
 | --- | --- | --- |
-| `heading` | See what a property tax levy limit could have saved you | The `h1` |
-| `lede` | Enter a North Carolina address… | Intro paragraph |
+| `heading` | How much could a property tax levy limit save you? | The `h1` |
+| `lede` | Enter your address to see how much lower your county property tax bill… | Intro paragraph |
 | `brand` | NC Property Tax Savings Calculator | Text in the blue bar |
 | `logo` | bundled `assets/images/logo.png` | |
 | `show_header` | `yes` | The blue brand bar. `no` to sit inside the theme's own header |
@@ -182,11 +196,24 @@ All optional; the defaults are the demo's copy.
 2. **Google Fonts.** The demo loads Public Sans and Courier Prime from
    `fonts.googleapis.com`. Corporate environments often block that or proxy it. Either
    allow it, or self-host the two families and return `false` from `ptx_load_fonts`.
-3. **The OneMap call is a cross-origin POST** to
-   `https://services.nconemap.gov/secure/rest/services/NC1Map_Parcels/MapServer/0/query`.
-   It needs `connect-src` for that host. It works from a plain page today, so it should
-   work behind a policy that permits it, but confirm — it is the tool's only data source
-   and its failure copy is deliberately generic ("Search failed (source unavailable)").
+3. **The parcel and address calls are cross-origin POSTs.** Every county needs
+   `connect-src` for `https://services.nconemap.gov`, and five counties need their own
+   service allowed as well, because the statewide parcel layer publishes no address for
+   them and the tool asks the county instead:
+
+   | County | Host to allow |
+   | --- | --- |
+   | Orange | `https://gis.orangecountync.gov` |
+   | Bladen | `https://gis.bladenco.org` |
+   | Cabarrus | `https://location.cabarruscounty.us` |
+   | Guilford | `https://gcgis.guilfordcountync.gov` |
+   | Avery | `https://services1.arcgis.com` |
+
+   These work from a plain page today, but confirm them behind the site's policy. A
+   blocked host surfaces as the generic "Search failed (source unavailable)" rather than
+   naming the county, so test one address in each of the five above and not only a
+   Mecklenburg address, or a policy gap will look like an ordinary failed search.
+   The Assessed value on every receipt still comes from `services.nconemap.gov`.
 4. **The methodology page links to johnlocke.org** for the HB 1089 model legislation. Keep
    or drop depending on how the corporate site handles outbound editorial links.
 5. **The methodology footer** names the GitHub repo. Replace via `ptx_methodology_repo`.

@@ -34,7 +34,7 @@ block containing:
 Most themes output the page title as the page's `<h1>`. The tool renders its own heading, and
 by default that heading is also an `<h1>` — which would leave the page with two. Setting it
 to `h2` makes the outline: page title as the `h1`, the tool's headline
-(*"See what a property tax levy limit could have saved you"*) as the `h2` beneath it.
+(*"How much could a property tax levy limit save you?"*) as the `h2` beneath it.
 
 **Check this against your theme before publishing.** View source and search for `<h1`:
 
@@ -61,7 +61,7 @@ the article below.
 
 **Also worth setting on this page:** a meta description, for search results. Something like:
 
-> Enter a North Carolina address to see what your county property tax would have been under a
+> Enter your address to see how much lower your county property tax bill could have been this year if a
 > levy limit anchored to the 2019 base year, and what that difference means for your bill.
 
 ---

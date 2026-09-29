@@ -43,6 +43,16 @@ Open the page and confirm:
 - choosing a property prints a receipt
 - the page has exactly one `<h1>` (view source, search `<h1`) — the page title, not two
 
+Two counties sets are worth a look while you have it open, because they behave differently
+by design rather than by fault:
+
+- **Orange, Bladen, Cabarrus, Guilford or Avery** — the address is resolved through that
+  county's own service rather than the statewide one, so a site with a strict
+  `Content-Security-Policy` can fail these while every other county still works. Test one
+  address in each.
+- **Franklin, Hoke, Perquimans or Richmond** — no receipt. The tool explains why and
+  reports the county's savings rate instead. That is the intended result, not a fault.
+
 If a search fails with "Search failed (source unavailable)", the page is being blocked from
 reaching NC OneMap — see below.
 
