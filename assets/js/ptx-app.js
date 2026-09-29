@@ -156,20 +156,12 @@
   // (improvement value > 0) so residences stay searchable. Both the direct
   // search and the county routes filter through this, so a receipt is filtered
   // the same way whichever route found the parcel.
-  function keepResidential(feats, codes) {
+  function keepResidential(feats) {
     var hasUseData = feats.some(function (a) {
       return String(a.parusecode || "").trim() || String(a.parusedesc || "").trim();
     });
     if (!hasUseData) {
       return feats.filter(function (a) { return Number(a.improvval) > 0 && Number(a.parval) > 0; });
-    }
-    // A county whose codes mean something other than the shared scheme
-    // supplies its own set, rather than the shared rule guessing.
-    if (codes && codes.length) {
-      return feats.filter(function (a) {
-        var code = String(a.parusecode || "").trim().toUpperCase();
-        return code ? codes.indexOf(code) !== -1 : PT.isUsableResidential(a);
-      });
     }
     return feats.filter(PT.isUsableResidential);
   }
@@ -200,7 +192,7 @@
     body.append("returnGeometry", "false");
     body.append("resultRecordCount", String(RESULT_LIMIT));
 
-    return this.postForm(ONEMAP_QUERY, body.toString()).then(function (f) { return keepResidential(f, PT.residentialCodes(cntyfips)); });
+    return this.postForm(ONEMAP_QUERY, body.toString()).then(keepResidential);
   };
 
   // ---- counties the statewide layer cannot search ---------------------------
@@ -238,7 +230,7 @@
     body.append("returnGeometry", "false");
 
     return this.postForm(ONEMAP_POLY, body.toString()).then(function (features) {
-      return features.length === 1 ? keepResidential(features, PT.residentialCodes(fips)) : [];
+      return features.length === 1 ? keepResidential(features) : [];
     });
   };
 

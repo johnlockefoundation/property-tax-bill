@@ -409,7 +409,7 @@ for (const slug of ["alamance", "moore"]) {
  * county-level savings rate is reported instead of a dead end.
  * ------------------------------------------------------------------------ */
 
-for (const slug of ["hoke", "perquimans", "richmond"]) {
+for (const slug of ["franklin", "hoke", "perquimans", "richmond"]) {
   test(`${BENCHMARKS[slug].label} reports the county-level rate instead of a receipt`, async () => {
     const c = BENCHMARKS[slug];
     const { doc, settle, window } = boot();
