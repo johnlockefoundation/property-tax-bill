@@ -21,8 +21,10 @@
   root.__PTX_BILL__ = true;
 
   var ONEMAP_QUERY = "https://services.nconemap.gov/secure/rest/services/NC1Map_Parcels/MapServer/0/query";
+  var ONEMAP_POLY = "https://services.nconemap.gov/secure/rest/services/NC1Map_Parcels/MapServer/1/query";
   var RESULT_LIMIT = 40;   // OneMap resultRecordCount, as in the demo
   var MAX_CANDIDATES = 8;  // rows shown in the candidate list, as in the demo
+  var MAX_ADDRESS_ROWS = 8;  // same-named streets to try in a county layer
   var SHOWN_CAP_NOTE = 8;
 
   var dataCache = {};
@@ -149,6 +151,149 @@
 
   /* ---- address search -------------------------------------------------- */
 
+  // Counties like Macon ship no land-use code OR description at all, so there
+  // is nothing to classify by; there, fall back to "a building stands on it"
+  // (improvement value > 0) so residences stay searchable. Both the direct
+  // search and the county routes filter through this, so a receipt is filtered
+  // the same way whichever route found the parcel.
+  function keepResidential(feats, codes) {
+    var hasUseData = feats.some(function (a) {
+      return String(a.parusecode || "").trim() || String(a.parusedesc || "").trim();
+    });
+    if (!hasUseData) {
+      return feats.filter(function (a) { return Number(a.improvval) > 0 && Number(a.parval) > 0; });
+    }
+    // A county whose codes mean something other than the shared scheme
+    // supplies its own set, rather than the shared rule guessing.
+    if (codes && codes.length) {
+      return feats.filter(function (a) {
+        var code = String(a.parusecode || "").trim().toUpperCase();
+        return code ? codes.indexOf(code) !== -1 : PT.isUsableResidential(a);
+      });
+    }
+    return feats.filter(PT.isUsableResidential);
+  }
+
+  var PARCEL_FIELDS = "parno,siteadd,parval,parvaltype,parusecode,parusedesc,improvval,stcntyfips,cntyfips";
+
+  Bill.prototype.postForm = function (url, body) {
+    return fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: body
+    })
+      .then(function (resp) { return resp.text(); })
+      .then(function (text) {
+        var data = JSON.parse(text);
+        if (data.error) throw new Error(data.error.message || "Service error");
+        return (data.features || []).map(function (f) { return f.attributes; });
+      });
+  };
+
+  Bill.prototype.queryOneMap = function (where, cntyfips) {
+    if (!where) return Promise.resolve([]);
+
+    var body = new URLSearchParams();
+    body.append("where", cntyfips ? "(" + where + ") AND stcntyfips = '" + cntyfips + "'" : "(" + where + ") AND stcntyfips LIKE '37%'");
+    body.append("outFields", PARCEL_FIELDS);
+    body.append("f", "pjson");
+    body.append("returnGeometry", "false");
+    body.append("resultRecordCount", String(RESULT_LIMIT));
+
+    return this.postForm(ONEMAP_QUERY, body.toString()).then(function (f) { return keepResidential(f, PT.residentialCodes(cntyfips)); });
+  };
+
+  // ---- counties the statewide layer cannot search ---------------------------
+  //
+  // Nine counties publish no site address in the statewide parcel layer, so a
+  // whole-string search there can never hit. Six of them answer from their own
+  // service, either carrying the parcel number on the address record, or as a
+  // point the parcel is found by. Either way the assessed value is then read
+  // from the statewide layer by parcel number, so the figure on the receipt
+  // still comes from one dataset.
+
+  // The parcel carrying this parcel number.
+  Bill.prototype.parcelByNumber = function (fips, key) {
+    var parno = PT.oneMapParno(fips, key);
+    if (!parno) return Promise.resolve([]);
+    return this.queryOneMap("(UPPER(PARNO) = UPPER('" + parno.replace(/'/g, "''") + "'))", fips);
+  };
+
+  // The parcel containing this point. More than one hit means the point is on a
+  // shared boundary or a condominium stack, where the answer really is
+  // ambiguous, so nothing is returned rather than a guess.
+  Bill.prototype.parcelAtPoint = function (fips, attrs, source) {
+    var x = Number(attrs[source.lon]);
+    var y = Number(attrs[source.lat]);
+    if (!isFinite(x) || !isFinite(y)) return Promise.resolve([]);
+
+    var body = new URLSearchParams();
+    body.append("where", "stcntyfips = '" + fips + "'");
+    body.append("geometry", x + "," + y);
+    body.append("geometryType", "esriGeometryPoint");
+    body.append("inSR", String(source.srs));
+    body.append("spatialRel", "esriSpatialRelIntersects");
+    body.append("outFields", PARCEL_FIELDS);
+    body.append("f", "pjson");
+    body.append("returnGeometry", "false");
+
+    return this.postForm(ONEMAP_POLY, body.toString()).then(function (features) {
+      return features.length === 1 ? keepResidential(features, PT.residentialCodes(fips)) : [];
+    });
+  };
+
+  Bill.prototype.resolveCountyParcel = function (source, fips, variants) {
+    var self = this;
+    var n = 0;
+
+    var attempt = function () {
+      if (n >= variants.length) return Promise.resolve([]);
+      var v = variants[n++];
+
+      // A statewide address layer needs the county pinned down: a plain street
+      // name returns the same-named road in a dozen counties, and without the
+      // scope the right one can fall outside the rows returned.
+      var scope = source.countyField ? source.countyField + " = '" + fips.slice(2) + "' AND " : "";
+
+      var body = new URLSearchParams();
+      body.append("where", scope + "UPPER(" + source.field + ") LIKE UPPER('%" + v.replace(/'/g, "''") + "%')");
+      body.append("outFields", source.mode === "key" ? source.field + "," + source.key : source.field + "," + source.lon + "," + source.lat);
+      body.append("f", "pjson");
+      body.append("returnGeometry", "false");
+      body.append("resultRecordCount", String(RESULT_LIMIT));
+
+      return self.postForm(source.address, body.toString()).then(function (rows) {
+        if (!rows.length) return attempt();
+
+        // A county layer is not necessarily scoped to its own county, so a
+        // plain street name can match the same-named road next door. Every
+        // match is tried until one resolves to a parcel in this county.
+        var i = 0;
+        var tryRow = function () {
+          if (i >= Math.min(rows.length, MAX_ADDRESS_ROWS)) return attempt();
+          var attrs = rows[i++];
+          var found = source.mode === "key"
+            ? self.parcelByNumber(fips, attrs[source.key])
+            : self.parcelAtPoint(fips, attrs, source);
+          return found.then(function (feats) {
+            if (feats.length) {
+              // These parcels have no site address in the statewide layer, so
+              // carry the county's own address for display.
+              for (var j = 0; j < feats.length; j++) {
+                if (!feats[j].siteadd) feats[j].ptxAddress = attrs[source.field];
+              }
+              return feats;
+            }
+            return tryRow();
+          });
+        };
+        return tryRow();
+      });
+    };
+
+    return attempt();
+  };
+
   // PT.buildQueryVariants (in ptx-calc.js, byte-identical to the demo's
   // calc.js) turns whatever was typed into a short ladder of street-line forms:
   // narrowest first, the raw string last. Each is tried in turn below.
@@ -158,44 +303,14 @@
   // broader form instead of reporting "no matches". A service error is not a
   // miss and still propagates, so the failure copy stays honest.
   Bill.prototype.fetchAddressFeatures = function (queries, cntyfips) {
+    var self = this;
     var list = Array.isArray(queries) ? queries : [queries];
 
     var attempt = function (i) {
       if (i >= list.length) return Promise.resolve([]);
-      var where = PT.buildAddressWhere(list[i]);
-      if (!where) return attempt(i + 1);
-
-      var body = new URLSearchParams();
-      body.append("where", cntyfips ? "(" + where + ") AND stcntyfips = '" + cntyfips + "'" : "(" + where + ") AND stcntyfips LIKE '37%'");
-      body.append("outFields", "parno,siteadd,parval,parvaltype,parusecode,parusedesc,improvval,stcntyfips,cntyfips");
-      body.append("f", "pjson");
-      body.append("returnGeometry", "false");
-      body.append("resultRecordCount", String(RESULT_LIMIT));
-
-      return fetch(ONEMAP_QUERY, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString()
-      })
-        .then(function (resp) { return resp.text(); })
-        .then(function (text) {
-          var data = JSON.parse(text);
-          if (data.error) throw new Error(data.error.message || "Service error");
-          var feats = (data.features || []).map(function (f) { return f.attributes; });
-          // Counties like Macon ship no land-use code OR description at all, so
-          // there is nothing to classify by; there, fall back to "a building
-          // stands on it" (improvement value > 0) so residences stay searchable.
-          var hasUseData = feats.some(function (a) {
-            return String(a.parusecode || "").trim() || String(a.parusedesc || "").trim();
-          });
-          if (!hasUseData) {
-            return feats.filter(function (a) { return Number(a.improvval) > 0 && Number(a.parval) > 0; });
-          }
-          return feats.filter(PT.isUsableResidential);
-        })
-        .then(function (feats) {
-          return feats.length ? feats : attempt(i + 1);
-        });
+      return self.queryOneMap(PT.buildAddressWhere(list[i]), cntyfips).then(function (feats) {
+        return feats.length ? feats : attempt(i + 1);
+      });
     };
 
     return attempt(0);
@@ -237,7 +352,7 @@
             if (key) return key;
             return self.inferCountyKey(variants).then(function (inferred) {
               if (!inferred) {
-                self.setStatus("No residential matches found. Try a street name or house number.");
+                self.setStatus("No residential matches found. Try a street name or house number, or choose your county above.");
                 return null;
               }
               self.el.select.value = inferred;
@@ -247,7 +362,15 @@
           })
           .then(function (key) {
             if (!key) return;
-            return self.fetchAddressFeatures(variants, self.benchmarks[key].fips).then(function (feats) {
+            var fips = self.benchmarks[key].fips;
+            var source = PT.parcelSource(fips);
+            // A county the statewide layer cannot search answers from its own
+            // service, and needs the raw query because the ladder is built for
+            // that county's own spelling of a street.
+            var lookup = source
+              ? self.resolveCountyParcel(source, fips, PT.buildCountyVariants(q, source.spelling === "long"))
+              : self.fetchAddressFeatures(variants, fips);
+            return lookup.then(function (feats) {
               if (feats.length === 0) {
                 self.setStatus("");
                 self.el.nores.classList.remove("ptx-hidden");
@@ -281,7 +404,7 @@
       var li = doc.createElement("li");
       var type = (f.parusedesc || f.parusecode || "").replace(/\b\w/g, function (c) { return c.toUpperCase(); });
       li.innerHTML =
-        "<div>" + esc(f.siteadd || "No address") + "</div>" +
+        "<div>" + esc(f.siteadd || f.ptxAddress || "No address") + "</div>" +
         "<div class=\"ptx-val\">$" + (f.parval || 0).toLocaleString() + " &middot; " + esc(type) + "</div>" +
         "<div class=\"ptx-pid\">Parcel " + esc(f.parno) + "</div>";
       li.addEventListener("click", function () { self.selectParcel(f); });
@@ -292,7 +415,7 @@
   /* ---- bill ------------------------------------------------------------ */
 
   Bill.prototype.selectParcel = function (f) {
-    this.el.address.textContent = f.siteadd || "No address";
+    this.el.address.textContent = f.siteadd || f.ptxAddress || "No address";
     this.el.meta.innerHTML =
       "<div>Parcel " + esc(f.parno || "—") + "</div>" +
       "<div>Assessed value $" + Number(f.parval || 0).toLocaleString() + "</div>";

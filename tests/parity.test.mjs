@@ -197,7 +197,7 @@ test("the receipt's printed labels and framing are unchanged", () => {
 test("status and empty-state strings are unchanged", () => {
   for (const s of [
     "Searching…",
-    "No residential matches found. Try a street name or house number.",
+    "No residential matches found. Try a street name or house number, or choose your county above.",
     "Search failed (source unavailable). Please try again.",
     "No residential properties matched. Check the spelling or try a nearby street name.",
     "The per-property comparison is unavailable for this county yet.",
