@@ -54,7 +54,7 @@ check('results region is announced', str_contains($bill, 'aria-live="polite"'));
 check('receipt present', str_contains($bill, 'ptx-receipt'));
 check('receipt totals default to $0', substr_count($bill, '>$0</span>') === 2 && str_contains($bill, 'ptx-amt-saved">$0<'));
 check('methodology disclosure present', str_contains($bill, 'How we calculated this'));
-check('disclosure lists the formula caveat', str_contains($bill, 'County-wide property tax only, not the full bill'));
+check('disclosure lists the formula caveat', str_contains($bill, 'excluding county special district levies and all municipal levies'));
 check('no ids left over from the demo', !preg_match('/\sid="/', $bill), 'ids are global; classes are used instead');
 check('balanced div tags', substr_count($bill, '<div') === substr_count($bill, '</div>'));
 check('balanced details tags', substr_count($bill, '<details') === substr_count($bill, '</details>'));
@@ -81,7 +81,7 @@ echo "\n[ptx_bill] filterable defaults\n";
 $GLOBALS['ptx_filters']['ptx_default_heading'] = function ($v) { return 'Reworded headline'; };
 check('heading filter applies', str_contains(NC_Property_Tax_Bill::render_bill(), 'Reworded headline'));
 unset($GLOBALS['ptx_filters']['ptx_default_heading']);
-check('default restored after filter removed', str_contains(NC_Property_Tax_Bill::render_bill(), 'See what a property tax levy limit'));
+check('default restored after filter removed', str_contains(NC_Property_Tax_Bill::render_bill(), 'How much could a property tax levy limit save you'));
 
 /* --- two instances on one page ----------------------------------------- */
 

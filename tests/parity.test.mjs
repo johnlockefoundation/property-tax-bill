@@ -188,7 +188,7 @@ test("the receipt's printed labels and framing are unchanged", () => {
     "*** THANK YOU ***",
     "Property Tax Receipt",
     "--Select a County--",
-    "Partial addresses are ok. Click or tap your address when it appears.",
+    "Partial addresses are OK. Click or tap your address when it appears.",
   ]) {
     assert.ok(billTpl.includes(label) || pluginApp.includes(label), `missing receipt copy: ${label}`);
   }

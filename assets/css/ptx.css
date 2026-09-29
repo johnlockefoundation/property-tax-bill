@@ -492,7 +492,64 @@
 }
 
 .ptx-method-body p {
-  margin: 1em 0;
+  margin: 6px 0 10px;
+}
+
+.ptx-method-body h3 {
+  font-size: 14px;
+  margin: 16px 0 6px;
+  color: var(--ink);
+}
+
+.ptx-method-body h4 {
+  font-size: 13.5px;
+  margin: 12px 0 4px;
+  color: var(--ink);
+}
+
+.ptx-method-body ul {
+  margin: 4px 0 8px;
+  padding-left: 20px;
+}
+
+.ptx-method-body li {
+  margin: 0 0 6px;
+}
+
+.ptx-method-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 6px 0 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.ptx-method-table th,
+.ptx-method-table td {
+  border: 1px solid var(--line);
+  padding: 7px 9px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.ptx-method-table th {
+  background: var(--bg);
+  font-weight: 700;
+}
+
+.ptx-method-formula {
+  font-family: "Courier Prime", "Courier New", monospace;
+  font-size: 12.5px;
+  background: var(--bg);
+  padding: 8px 10px;
+  border-left: 3px solid var(--jlf);
+}
+
+.ptx-privacy {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 6px 0 0;
+  line-height: 1.45;
 }
 
 .ptx-method-body .ptx-sources a {
