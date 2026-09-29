@@ -1,6 +1,6 @@
 {
   "name": "nc-property-tax-bill",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "Test harness for the NC Property Tax Bill WordPress plugin. The plugin itself ships no JavaScript dependencies; jsdom is used only to drive the rendered markup in tests.",
   "scripts": {

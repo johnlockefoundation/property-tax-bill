@@ -4,7 +4,7 @@
  * Description: Auto-loads the NC Property Tax Bill tool. Files in wp-content/mu-plugins/ are
  *              loaded by WordPress without needing activation, which is useful when the account
  *              you have cannot see the Plugins screen. Delete this file to disable the tool.
- * Version:     1.1.0
+ * Version:     1.2.0
  *
  * Installation: this file and the nc-property-tax-bill/ folder must sit side by side, both
  * directly inside wp-content/mu-plugins/.

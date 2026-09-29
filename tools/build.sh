@@ -42,6 +42,20 @@ rsync -a \
   "$SRC/" "$STAGE/$PLUGIN_SLUG/"
 cp "$SRC/mu-plugin/ptx-loader.php" "$STAGE/"
 
+# --- versions agree ----------------------------------------------------------
+# The plugin header, the mu-plugin loader and the npm package are three places
+# the version is written down, and the loader's header is the one WordPress
+# shows in the admin when the tool is installed as a must-use plugin. They drifted
+# once already, so the build refuses to package a build where they disagree.
+for v in "$SRC/mu-plugin/ptx-loader.php" "$SRC/package.json"; do
+  got="$(grep -m1 -oE '(Version:[[:space:]]+|"version":[[:space:]]*")1\.[0-9]+\.[0-9]+' "$v" | grep -oE '1\.[0-9]+\.[0-9]+')"
+  if [ "$got" != "$VERSION" ]; then
+    echo "  FAIL: $(basename "$v") says $got, the plugin is $VERSION" >&2
+    exit 1
+  fi
+done
+echo "  loader and package.json agree with the plugin ($VERSION)"
+
 # --- syntax ----------------------------------------------------------------
 for f in "$STAGE/$PLUGIN_SLUG"/*.php "$STAGE/$PLUGIN_SLUG"/templates/*.php "$STAGE/ptx-loader.php"; do
   php -l "$f" > /dev/null
