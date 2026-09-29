@@ -58,17 +58,26 @@ reaching NC OneMap — see below.
 
 ## 4. If the site has a Content-Security-Policy
 
-The tool makes a cross-origin request to
-`services.nconemap.gov` and draws the receipt's torn edges with inline `data:` images. If
-your `Content-Security-Policy` header is strict, add:
+The tool asks other servers for parcel data, and draws the receipt's torn edges with
+inline `data:` images. A strict `Content-Security-Policy` blocks those requests, and the
+search then fails with "Search failed (source unavailable)" — with no indication of which
+county was involved. If the site sets one, it needs:
 
 ```
-connect-src 'self' https://services.nconemap.gov
+connect-src 'self' https://services.nconemap.gov https://gis.orangecountync.gov https://gis.bladenco.org https://location.cabarruscounty.us https://gcgis.guilfordcountync.gov https://services1.arcgis.com
 img-src     'self' data:
 ```
 
-Without those, searching fails silently and the receipt renders with square corners instead
-of the torn paper edge. Both are cosmetic or functional, never errors.
+`connect-src` is the one that matters. Without it, searching fails. Without the `img-src`
+line only the torn edges of the receipt are affected.
+
+**Test one address in each of the five counties above after uploading**, not just an
+address in a county the statewide service covers. A missing host breaks those five
+counties and leaves the other 95 working, which is easy to mistake for the tool being
+broken in some places rather than in five.
+
+The assessed value on every receipt comes from `services.nconemap.gov`. The other five
+are asked only to identify which parcel an address belongs to.
 
 ## 5. Fonts
 
