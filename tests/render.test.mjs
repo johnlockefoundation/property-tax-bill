@@ -53,9 +53,32 @@ const MECK = { value: VALUE, stcntyfips: "37119", cntyfips: "119" };
 /** URLSearchParams bodies are form-encoded; assertions read the decoded form. */
 const form = (body) => decodeURIComponent(String(body).replace(/\+/g, " "));
 
+/** The text one request searched for, without the LIKE wildcards: "1000 E WOODLAWN RD". */
+const likeQuery = (body) => {
+  const m = form(body).match(/UPPER\(siteadd\) LIKE UPPER\('%(.+)%'\)/);
+  return m ? m[1] : null;
+};
+
+/**
+ * A stand-in for OneMap that only answers the way the real service would: a
+ * query matches when it appears inside the stored site address. The default
+ * stub in boot() answers everything, which would hide a mis-shaped query.
+ */
+function likeService(siteadd) {
+  return (body) => {
+    const q = likeQuery(body);
+    if (q && siteadd.toUpperCase().includes(q.toUpperCase())) return oneMap(MECK);
+    return JSON.stringify({ features: [] });
+  };
+}
+
 /**
  * Boot the rendered markup in jsdom with a stubbed network, and hand back the
  * window plus a helper for letting the app's promise chains settle.
+ *
+ * `parcels` may be a response string, or a function receiving the request body
+ * and returning one, so a test can answer per query and watch the app fall
+ * through its ladder of address forms.
  */
 function boot({ billHtml, parcels = oneMap(MECK), label = "" } = {}) {
   const dom = new JSDOM(`<!DOCTYPE html><html><body>${billHtml ?? render()}</body></html>`, {
@@ -72,7 +95,7 @@ function boot({ billHtml, parcels = oneMap(MECK), label = "" } = {}) {
       return Promise.resolve({ json: () => Promise.resolve(BENCHMARKS) });
     }
     if (u.includes("MapServer")) {
-      const body = typeof parcels === "function" ? parcels() : parcels;
+      const body = typeof parcels === "function" ? parcels(opts && opts.body) : parcels;
       return Promise.resolve({ text: () => Promise.resolve(body) });
     }
     return Promise.reject(new Error("unexpected fetch: " + u));
@@ -186,6 +209,170 @@ test("an explicit county selection skips the statewide probe", async () => {
   assert.equal(onemap.length, 1);
   assert.match(form(onemap[0].body), /stcntyfips = '37119'/);
   assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1);
+});
+
+/* ---------------------------------------------------------------------------
+ * Addresses as people actually type them
+ *
+ * OneMap stores a standardised street line, but the box receives a whole
+ * postal address from browser autofill, and suffix spellings vary. Each test
+ * below answers only the way the real service would, so a query the service
+ * would never match fails here rather than passing on a permissive stub.
+ * ------------------------------------------------------------------------ */
+
+/** The address forms the app actually put on the wire, in order. */
+const patterns = (calls) => calls.filter((c) => c.url.includes("MapServer")).map((c) => likeQuery(c.body));
+
+test("a full postal address from browser autofill still finds the parcel", async () => {
+  const { doc, settle, calls } = boot({ parcels: likeService("1000 E WOODLAWN RD") });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-input").value = "1000 E Woodlawn Rd, Charlotte, NC 28203";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  const cands = $(r, ".ptx-cands").querySelectorAll("li");
+  assert.equal(cands.length, 1, "the parcel is found");
+  assert.match(cands[0].textContent, /1000 E WOODLAWN RD/);
+  assert.equal($(r, ".ptx-select").value, "mecklenburg", "county inferred from the address");
+
+  const sent = patterns(calls);
+  assert.deepEqual(sent, ["1000 E WOODLAWN RD", "1000 E WOODLAWN RD"], "street line only, both queries");
+  assert.ok(!sent.some((p) => /28203|CHARLOTTE/.test(p)), "city and ZIP never reach the query");
+});
+
+test("a pasted address with no commas drops the city, state and ZIP", async () => {
+  const { doc, settle, calls } = boot({ parcels: likeService("1000 E WOODLAWN RD") });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-input").value = "1000 E Woodlawn Rd Charlotte NC 28203";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1, "the parcel is found");
+  assert.deepEqual(patterns(calls), ["1000 E WOODLAWN RD", "1000 E WOODLAWN RD"]);
+});
+
+test("a spelled-out suffix and direction find the abbreviated street", async () => {
+  const { doc, settle, calls, window } = boot({ parcels: likeService("1000 E WOODLAWN RD") });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  $(r, ".ptx-input").value = "1000 East Woodlawn Road";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1, "the parcel is found");
+  assert.deepEqual(patterns(calls), ["1000 E WOODLAWN RD"], "folded to the stored form on the first try");
+});
+
+test("a unit designator falls back to the bare street line", async () => {
+  const { doc, settle, calls, window } = boot({ parcels: likeService("1000 E WOODLAWN RD") });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  $(r, ".ptx-input").value = "1000 E Woodlawn Rd Apt 4B";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1, "the parcel is found");
+  assert.deepEqual(patterns(calls), ["1000 E WOODLAWN RD APT 4B", "1000 E WOODLAWN RD"]);
+});
+
+test("a street typed with a # unit still matches", async () => {
+  const { doc, settle, calls, window } = boot({ parcels: likeService("1000 E WOODLAWN RD") });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  $(r, ".ptx-input").value = "1000 E Woodlawn Rd #4B";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1, "the parcel is found");
+  assert.deepEqual(patterns(calls), ["1000 E WOODLAWN RD # 4B", "1000 E WOODLAWN RD"]);
+});
+
+test("a suffix that is not on file falls through to the suffix-free form", async () => {
+  const { doc, settle, calls, window } = boot({ parcels: likeService("1000 WOODLAWN TRN") });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  $(r, ".ptx-input").value = "1000 Woodlawn Turn";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1, "the parcel is found");
+  // "Turn" is not in the table, so the ladder relies on the Street+Name rung.
+  assert.deepEqual(patterns(calls), ["1000 WOODLAWN TURN", "1000 WOODLAWN"]);
+});
+
+test("an address nothing matches still ends on the empty state, not a false hit", async () => {
+  const { doc, settle, calls, window } = boot({ parcels: likeService("1000 E WOODLAWN RD") });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  $(r, ".ptx-input").value = "999 Nonexistent Pkwy, Raleigh, NC 27601";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 0);
+  assert.ok(!$(r, ".ptx-nores").classList.contains("ptx-hidden"), "no-results note shown");
+
+  const sent = patterns(calls);
+  assert.equal(sent[0], "999 NONEXISTENT PKWY", "the first rung is the stripped street line");
+  assert.ok(sent.includes("999 NONEXISTENT"), "it fell through to the suffix-free form");
+  assert.ok(
+    sent[sent.length - 1] === "999 Nonexistent Pkwy, Raleigh, NC 27601",
+    "the raw text is kept only as the last rung, exactly as the demo sent it"
+  );
+});
+
+test("the ladder never widens past the street name and house number", async () => {
+  const { doc, settle, calls, window } = boot({ parcels: likeService("1000 WOODLAWN RD") });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  $(r, ".ptx-input").value = "1000 Woodlawn";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1, "still found");
+  assert.deepEqual(patterns(calls), ["1000 WOODLAWN"], "no over-broad fallback below house number plus name");
+});
+
+test("a service error on the first rung is not mistaken for a miss", async () => {
+  const { doc, settle, window } = boot({
+    // Only the suffix-free rung answers; the first rung is a service error.
+    parcels: (body) => (likeQuery(body) === "1000 WOODLAWN" ? JSON.stringify({ features: [] }) : JSON.stringify({ error: { message: "bad query" } })),
+  });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  $(r, ".ptx-input").value = "1000 Woodlawn Trn";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  // The first rung errors; the app must report that rather than quietly
+  // falling through and claiming the address did not match.
+  assert.equal($(r, ".ptx-status").textContent, "Search failed (source unavailable). Please try again.");
+  assert.ok($(r, ".ptx-nores").classList.contains("ptx-hidden"), "no false 'no matches' state");
+  assert.equal($(r, ".ptx-btn").disabled, false, "the button is re-enabled");
 });
 
 /* ---------------------------------------------------------------------------

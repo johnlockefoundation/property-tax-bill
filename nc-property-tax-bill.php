@@ -3,7 +3,7 @@
  * Plugin Name:       NC Property Tax Bill
  * Plugin URI:        https://www.johnlocke.org/
  * Description:       Embeds the NC property-tax bill tool — address search against NC OneMap and an HB 1089 levy-limit receipt — with the demo's "How we calculated this" methodology disclosure. Use the [ptx_bill] shortcode or the "NC Property Tax Bill" block.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * License:           GPL-2.0-or-later
@@ -20,7 +20,7 @@ defined('ABSPATH') || exit;
 
 final class NC_Property_Tax_Bill {
 
-	const VERSION = '1.1.0';
+	const VERSION = '1.2.0';
 	const FILE    = __FILE__;
 
 	const SHORT_BILL        = 'ptx_bill';

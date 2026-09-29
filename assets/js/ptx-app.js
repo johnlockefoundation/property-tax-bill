@@ -127,43 +127,61 @@
 
   /* ---- address search -------------------------------------------------- */
 
-  Bill.prototype.fetchAddressFeatures = function (q, cntyfips) {
-    var where = PT.buildAddressWhere(q);
-    if (!where) return Promise.resolve([]);
+  // PT.buildQueryVariants (in ptx-calc.js, byte-identical to the demo's
+  // calc.js) turns whatever was typed into a short ladder of street-line forms:
+  // narrowest first, the raw string last. Each is tried in turn below.
+  //
+  // Tries each variant in turn and returns the first set of parcels that
+  // survives the residential filter, so a narrow miss falls through to a
+  // broader form instead of reporting "no matches". A service error is not a
+  // miss and still propagates, so the failure copy stays honest.
+  Bill.prototype.fetchAddressFeatures = function (queries, cntyfips) {
+    var list = Array.isArray(queries) ? queries : [queries];
 
-    var body = new URLSearchParams();
-    body.append("where", cntyfips ? "(" + where + ") AND stcntyfips = '" + cntyfips + "'" : "(" + where + ") AND stcntyfips LIKE '37%'");
-    body.append("outFields", "parno,siteadd,parval,parvaltype,parusecode,parusedesc,improvval,stcntyfips,cntyfips");
-    body.append("f", "pjson");
-    body.append("returnGeometry", "false");
-    body.append("resultRecordCount", String(RESULT_LIMIT));
+    var attempt = function (i) {
+      if (i >= list.length) return Promise.resolve([]);
+      var where = PT.buildAddressWhere(list[i]);
+      if (!where) return attempt(i + 1);
 
-    return fetch(ONEMAP_QUERY, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: body.toString()
-    })
-      .then(function (resp) { return resp.text(); })
-      .then(function (text) {
-        var data = JSON.parse(text);
-        if (data.error) throw new Error(data.error.message || "Service error");
-        var feats = (data.features || []).map(function (f) { return f.attributes; });
-        // Counties like Macon ship no land-use code OR description at all, so
-        // there is nothing to classify by; there, fall back to "a building
-        // stands on it" (improvement value > 0) so residences stay searchable.
-        var hasUseData = feats.some(function (a) {
-          return String(a.parusecode || "").trim() || String(a.parusedesc || "").trim();
+      var body = new URLSearchParams();
+      body.append("where", cntyfips ? "(" + where + ") AND stcntyfips = '" + cntyfips + "'" : "(" + where + ") AND stcntyfips LIKE '37%'");
+      body.append("outFields", "parno,siteadd,parval,parvaltype,parusecode,parusedesc,improvval,stcntyfips,cntyfips");
+      body.append("f", "pjson");
+      body.append("returnGeometry", "false");
+      body.append("resultRecordCount", String(RESULT_LIMIT));
+
+      return fetch(ONEMAP_QUERY, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString()
+      })
+        .then(function (resp) { return resp.text(); })
+        .then(function (text) {
+          var data = JSON.parse(text);
+          if (data.error) throw new Error(data.error.message || "Service error");
+          var feats = (data.features || []).map(function (f) { return f.attributes; });
+          // Counties like Macon ship no land-use code OR description at all, so
+          // there is nothing to classify by; there, fall back to "a building
+          // stands on it" (improvement value > 0) so residences stay searchable.
+          var hasUseData = feats.some(function (a) {
+            return String(a.parusecode || "").trim() || String(a.parusedesc || "").trim();
+          });
+          if (!hasUseData) {
+            return feats.filter(function (a) { return Number(a.improvval) > 0 && Number(a.parval) > 0; });
+          }
+          return feats.filter(PT.isUsableResidential);
+        })
+        .then(function (feats) {
+          return feats.length ? feats : attempt(i + 1);
         });
-        if (!hasUseData) {
-          return feats.filter(function (a) { return Number(a.improvval) > 0 && Number(a.parval) > 0; });
-        }
-        return feats.filter(PT.isUsableResidential);
-      });
+    };
+
+    return attempt(0);
   };
 
-  Bill.prototype.inferCountyKey = function (q) {
+  Bill.prototype.inferCountyKey = function (queries) {
     var self = this;
-    return this.fetchAddressFeatures(q, null).then(function (feats) {
+    return this.fetchAddressFeatures(queries, null).then(function (feats) {
       for (var i = 0; i < feats.length; i++) {
         var sfips = String(feats[i].stcntyfips || "");
         for (var k in self.benchmarks) {
@@ -186,16 +204,16 @@
     this.clearBill();
 
     var done = function () { self.el.button.disabled = false; };
+    var variants = PT.buildQueryVariants(q);
 
     return Promise.resolve()
       .then(function () {
-        var where = PT.buildAddressWhere(q);
-        if (!where) { self.setStatus(""); return; }
+        if (!variants.length) { self.setStatus(""); return; }
 
         return Promise.resolve(self.selected && self.benchmarks[self.selected] ? self.selected : null)
           .then(function (key) {
             if (key) return key;
-            return self.inferCountyKey(q).then(function (inferred) {
+            return self.inferCountyKey(variants).then(function (inferred) {
               if (!inferred) {
                 self.setStatus("No residential matches found. Try a street name or house number.");
                 return null;
@@ -207,7 +225,7 @@
           })
           .then(function (key) {
             if (!key) return;
-            return self.fetchAddressFeatures(q, self.benchmarks[key].fips).then(function (feats) {
+            return self.fetchAddressFeatures(variants, self.benchmarks[key].fips).then(function (feats) {
               if (feats.length === 0) {
                 self.setStatus("");
                 self.el.nores.classList.remove("ptx-hidden");

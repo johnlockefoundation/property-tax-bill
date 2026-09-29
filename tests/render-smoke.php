@@ -46,7 +46,8 @@ check('root carries the data URL', (bool) preg_match('/data-ptx-src="https:\/\/[
 check('brand bar rendered', str_contains($bill, 'ptx-header') && str_contains($bill, 'ptx-brand'));
 check('logo has alt text', str_contains($bill, 'alt="John Locke Foundation"'));
 check('county select present with placeholder', str_contains($bill, '--Select a County--'));
-check('address input present', str_contains($bill, 'placeholder="Street address, e.g. 1000 E Woodlawn Rd"'));
+check('address input present', str_contains($bill, 'placeholder="Address, e.g. 1000 E Woodlawn Rd, Charlotte NC"'));
+check('address input allows browser autofill', !str_contains($bill, 'autocomplete="off"'));
 check('search button present', str_contains($bill, '<button class="ptx-btn" type="button">Search</button>'));
 check('status region is announced', str_contains($bill, 'role="status"'));
 check('results region is announced', str_contains($bill, 'aria-live="polite"'));

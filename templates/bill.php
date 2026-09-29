@@ -47,7 +47,7 @@ $ptx_head     = preg_match( '/^h[1-6]$/i', (string) $atts['heading_level'] ) ? s
           </select>
         </div>
         <div class="ptx-search-row">
-          <input class="ptx-input" type="text" placeholder="Street address, e.g. 1000 E Woodlawn Rd" autocomplete="off" aria-label="Street address" />
+          <input class="ptx-input" type="text" placeholder="Address, e.g. 1000 E Woodlawn Rd, Charlotte NC" aria-label="Property address" />
           <button class="ptx-btn" type="button">Search</button>
         </div>
         <p class="ptx-hint">Partial addresses are ok. Click or tap your address when it appears.</p>
