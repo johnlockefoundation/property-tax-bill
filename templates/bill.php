@@ -51,7 +51,7 @@ $ptx_head     = preg_match( '/^h[1-6]$/i', (string) $atts['heading_level'] ) ? s
           <button class="ptx-btn" type="button">Search</button>
         </div>
         <p class="ptx-hint">Partial addresses are OK. Click or tap your address when it appears.</p>
-        <p class="ptx-privacy">We do not collect, store or remember your address. Your search is sent straight to NC OneMap, the state's official parcel mapping service.</p>
+        <p class="ptx-privacy"><strong>We do not collect, store, or share your address in any way.</strong></p>
         <div class="ptx-status" role="status"></div>
         <ul class="ptx-cands"></ul>
         <div class="ptx-nores ptx-hidden">

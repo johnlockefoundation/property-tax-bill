@@ -32,7 +32,7 @@ final class NC_Property_Tax_Bill {
 	 * the template: ptx_default_heading, ptx_default_lede, ptx_default_brand.
 	 */
 	const DEFAULT_HEADING = 'How much could a property tax levy limit save you?';
-	const DEFAULT_LEDE    = 'Enter your address to see how much lower your county property tax bill could have been this year if a levy limit had been enacted five years ago.';
+	const DEFAULT_LEDE    = 'Enter your address to see how much lower your county property tax bill could have been this year if levy growth had been limited to inflation plus population growth over the past five years.';
 	const DEFAULT_BRAND   = 'NC Property Tax Savings Calculator';
 
 	public static function init() {

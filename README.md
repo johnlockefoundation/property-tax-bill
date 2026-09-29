@@ -148,7 +148,7 @@ All optional; the defaults are the demo's copy.
 | Attribute | Default | Notes |
 | --- | --- | --- |
 | `heading` | How much could a property tax levy limit save you? | The `h1` |
-| `lede` | Enter your address to see how much lower your county property tax bill… | Intro paragraph |
+| `lede` | Enter your address to see how much lower your county property tax bill… if levy growth had been limited… | Intro paragraph |
 | `brand` | NC Property Tax Savings Calculator | Text in the blue bar |
 | `logo` | bundled `assets/images/logo.png` | |
 | `show_header` | `yes` | The blue brand bar. `no` to sit inside the theme's own header |

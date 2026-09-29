@@ -61,8 +61,8 @@ the article below.
 
 **Also worth setting on this page:** a meta description, for search results. Something like:
 
-> Enter your address to see how much lower your county property tax bill could have been this year if a
-> levy limit anchored to the 2019 base year, and what that difference means for your bill.
+> Enter your address to see how much lower your county property tax bill could have been this year if levy
+> growth had been limited to inflation plus population growth over the past five years.
 
 ---
 
