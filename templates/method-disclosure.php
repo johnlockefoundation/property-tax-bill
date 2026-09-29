@@ -62,8 +62,15 @@ defined('ABSPATH') || exit;
                 <p>Because each year's calculation uses the previous year's hypothetical levy rather than the actual levy, the limit compounds over the five-year period.</p>
                 <ul>
                   <li><b>Compare actual and hypothetical levies:</b> For FY2021&ndash;22 through FY2025&ndash;26, we calculated the cumulative actual levy and cumulative hypothetical levy. We then calculated the dollar difference, percentage difference, and savings rate between the two totals.</li>
-                  <li><b>Estimate address-level savings:</b> We multiplied each property's FY2025&ndash;26 county property tax bill by its county's five-year savings rate to estimate how much lower the bill would be if the county's levy had been limited to population growth plus inflation over the previous five years.</li>
-                </ul>
+          <li><b>Estimate address-level savings:</b> We multiplied each property's FY2025&ndash;26 county property tax bill by its county's five-year savings rate to estimate how much lower the bill would be if the county's levy had been limited to population growth plus inflation over the previous five years.</li>
+        </ul>
+        <dl>
+          <dt>Why one year, not the five-year sum</dt>
+          <dd>The savings rate above is measured across five years, but your receipt is a single year. A parcel's assessment can shift relative to the county tax base over time, so adding up five years would assume a fixed share of a bill you never paid. FY2025&ndash;26 is compared on the current assessment.</dd>
+          <dt>Property value</dt>
+          <dd>Your receipt uses the parcel's current assessed value from NC OneMap. Reassessment timing is not modeled: where a county has revalued since the base year, the figure moves with the county's newer assessment.</dd>
+        </dl>
+
                 <p class="ptx-sources">Sources: county levy data (Data(tax).csv), NCDOR LG04 FY2025-26 assessed valuation, NC OneMap parcels, OSBM certified county population estimates, and BLS South urban CPI.</p>
                 <p>This is an estimate based on historical tax
         <p class="ptx-sources">Sources: county levy data (Data(tax).csv), NCDOR LG04 FY2025-26 assessed valuation, NC OneMap parcels, OSBM certified county population estimates, and BLS South urban CPI.</p>
