@@ -151,21 +151,6 @@
 
   /* ---- address search -------------------------------------------------- */
 
-  // Counties like Macon ship no land-use code OR description at all, so there
-  // is nothing to classify by; there, fall back to "a building stands on it"
-  // (improvement value > 0) so residences stay searchable. Both the direct
-  // search and the county routes filter through this, so a receipt is filtered
-  // the same way whichever route found the parcel.
-  function keepResidential(feats) {
-    var hasUseData = feats.some(function (a) {
-      return String(a.parusecode || "").trim() || String(a.parusedesc || "").trim();
-    });
-    if (!hasUseData) {
-      return feats.filter(function (a) { return Number(a.improvval) > 0 && Number(a.parval) > 0; });
-    }
-    return feats.filter(PT.isUsableResidential);
-  }
-
   var PARCEL_FIELDS = "parno,siteadd,parval,parvaltype,parusecode,parusedesc,improvval,stcntyfips,cntyfips";
 
   Bill.prototype.postForm = function (url, body) {
@@ -182,7 +167,9 @@
       });
   };
 
-  Bill.prototype.queryOneMap = function (where, cntyfips) {
+  // PT.keepResidential (in ptx-calc.js) filters whichever route found the
+  // parcel; `exact` says the parcel was resolved by number, not by free text.
+  Bill.prototype.queryOneMap = function (where, cntyfips, exact) {
     if (!where) return Promise.resolve([]);
 
     var body = new URLSearchParams();
@@ -192,7 +179,7 @@
     body.append("returnGeometry", "false");
     body.append("resultRecordCount", String(RESULT_LIMIT));
 
-    return this.postForm(ONEMAP_QUERY, body.toString()).then(keepResidential);
+    return this.postForm(ONEMAP_QUERY, body.toString()).then(function (f) { return PT.keepResidential(f, exact); });
   };
 
   // ---- counties the statewide layer cannot search ---------------------------
@@ -208,7 +195,7 @@
   Bill.prototype.parcelByNumber = function (fips, key) {
     var parno = PT.oneMapParno(fips, key);
     if (!parno) return Promise.resolve([]);
-    return this.queryOneMap("(UPPER(PARNO) = UPPER('" + parno.replace(/'/g, "''") + "'))", fips);
+    return this.queryOneMap("(UPPER(PARNO) = UPPER('" + parno.replace(/'/g, "''") + "'))", fips, true);
   };
 
   // The parcel containing this point. More than one hit means the point is on a
@@ -230,7 +217,7 @@
     body.append("returnGeometry", "false");
 
     return this.postForm(ONEMAP_POLY, body.toString()).then(function (features) {
-      return features.length === 1 ? keepResidential(features) : [];
+      return features.length === 1 ? PT.keepResidential(features, true) : [];
     });
   };
 

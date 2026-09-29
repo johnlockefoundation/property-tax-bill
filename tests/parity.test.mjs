@@ -214,8 +214,9 @@ test("the search contract and candidate cap are preserved", () => {
   assert.ok(pluginApp.includes("stcntyfips LIKE '37%'"), "statewide fallback filter");
   assert.ok(/var MAX_CANDIDATES = 8;/.test(pluginApp), "candidate cap of 8");
   assert.ok(/var RESULT_LIMIT = 40;/.test(pluginApp), "resultRecordCount of 40");
-  assert.ok(pluginApp.includes("PT.isUsableResidential"), "residential filter");
-  assert.ok(pluginApp.includes("Number(a.improvval) > 0"), "no-land-use-data fallback");
+  assert.ok(pluginApp.includes("PT.keepResidential"), "residential filter");
+  assert.ok(pluginCalc.includes("Number(a.improvval) > 0"), "no-land-use-data fallback");
+  assert.ok(pluginCalc.includes("keepResidential"), "the residential filter is shared, not per-app");
   assert.ok(pluginApp.includes('Math.round(100 * receipt.rate) + "% lower"'), "percent is the published rate");
 });
 
