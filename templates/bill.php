@@ -50,7 +50,9 @@ $ptx_head     = preg_match( '/^h[1-6]$/i', (string) $atts['heading_level'] ) ? s
           <input class="ptx-input" type="text" placeholder="Address, e.g. 1000 E Woodlawn Rd, Charlotte NC" aria-label="Property address" disabled />
           <button class="ptx-btn" type="button" disabled>Search</button>
         </div>
-        <p class="ptx-hint">Choose your county first, then enter your address. Partial addresses are OK. <b>Click or tap your address when it appears.</b> We may not be able to access data on recently built homes.</p>
+        <p class="ptx-hint">Choose your county first, then enter your address.</p>
+        <p class="ptx-hint">Partial addresses are OK. <b>Click or tap your address when it appears.</b></p>
+        <p class="ptx-hint">We may not be able to access data on recently built homes (up to 8 years for some counties).</p>
         <p class="ptx-privacy"><strong>We do not collect, store, or share your address in any way.</strong></p>
         <div class="ptx-status" role="status"></div>
         <ul class="ptx-cands"></ul>

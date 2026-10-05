@@ -175,8 +175,11 @@ test("the address bar stays locked until a county is chosen", async () => {
 
   assert.equal($(r, ".ptx-input").disabled, true, "the address box is locked on load");
   assert.equal($(r, ".ptx-btn").disabled, true, "and so is the button");
-  assert.match($(r, ".ptx-hint").textContent, /^Choose your county first/,
-    "the disclosure under the box says what to do");
+  const hints = [...r.querySelectorAll(".ptx-hint")].map((el) => el.textContent.trim());
+  assert.equal(hints.length, 3, "the three hints are separate paragraphs");
+  assert.match(hints[0], /^Choose your county first/, "the disclosure says what to do, first");
+  assert.match(hints[2], /recently built homes \(up to 8 years for some counties\)/,
+    "and the new-build caveat keeps its parenthesis");
 
   await pick(r, "mecklenburg");
   assert.equal($(r, ".ptx-input").disabled, false, "choosing a county unlocks it");

@@ -204,6 +204,13 @@
   line-height: 1.45;
 }
 
+/* The hints stack as separate paragraphs, so the gap between them is set here
+   rather than left to the shared margin, and the privacy line below needs a
+   little more room than it did when it followed a single hint. */
+.ptx-hint + .ptx-hint {
+  margin-top: 4px;
+}
+
 .ptx-status {
   font-size: 13px;
   color: #555;
@@ -556,7 +563,7 @@
 .ptx-privacy {
   font-size: 12px;
   color: var(--muted);
-  margin: 6px 0 0;
+  margin: 11px 0 0;
   line-height: 1.45;
 }
 

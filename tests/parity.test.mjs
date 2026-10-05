@@ -192,7 +192,7 @@ test("the receipt's printed labels and framing are unchanged", () => {
     // the sentence has to stay bold and the caveat after it has to stay put.
     "Partial addresses are OK.",
     "<b>Click or tap your address when it appears.</b>",
-    "We may not be able to access data on recently built homes.",
+    "We may not be able to access data on recently built homes (up to 8 years for some counties).",
   ]) {
     assert.ok(billTpl.includes(label) || pluginApp.includes(label), `missing receipt copy: ${label}`);
   }
