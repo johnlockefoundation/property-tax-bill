@@ -60,7 +60,7 @@
   // nothing that worked before stops working.
   var SUFFIXES = {
     ALLEY: "ALY", AVENUE: "AVE", BOULEVARD: "BLVD", BYPASS: "BYP", CIRCLE: "CIR",
-    CORNER: "COR", CROSSING: "XING", DRIVE: "DR", ESTATE: "EST", EXPRESSWAY: "EXPY",
+    CORNER: "COR", COURT: "CT", CROSSING: "XING", DRIVE: "DR", ESTATE: "EST", EXPRESSWAY: "EXPY",
     EXTENSION: "EXT", FREEWAY: "FWY", GARDEN: "GDN", GREEN: "GRN", GROVE: "GRV",
     HEIGHTS: "HTS", HIGHWAY: "HWY", HOLLOW: "HLLW", ISLAND: "IS", JUNCTION: "JCT",
     LAKE: "LK", LANDING: "LNDG", LANE: "LN", LOOP: "LOOP", MEADOWS: "MDWS",
@@ -237,14 +237,69 @@
   var RESIDENTIAL_DESC = [
     /\bRESID/, /\bFAMILY/, /\bTOWNHOUS/, /\bCONDO/, /\bAPARTMENT/, /\bMULTI-FAMILY/,
     /\bDUPLEX/, /\bTRIPLEX/, /\bMOBILE HOME/, /\bMANUFACTURED HOME/, /\bSINGLE WIDE/,
-    /\bDOUBLE WIDE/, /\bCOTTAGE/, /\bBUNGALOW/, /\bTRAILER/
+    /\bDOUBLE WIDE/, /\bCOTTAGE/, /\bBUNGALOW/, /\bTRAILER/,
+    // Counties that lead the label with their own initial, so "D-Dwelling" and
+    // "RES" have to be read as the house and the vacancy they stand for.
+    /\bD-?DWELLING/, /^RES$/,
+    // Henderson writes its own prefix on both sides of a hyphen: "RES-CONDO" and
+    // "RES-MODULAR" are houses, "COMM-CONDO" and "COMM-LI" are not. The
+    // manufactured-home wording there is abbreviated to "MANF"/"MANU" too.
+    /^RES-/, /\bMAN[FU] HOME/, /\bPERSONAL PROPERTY MH\b/, /\bMODULAR/, /\bLEASEHOLD/, /\bMULTI RE\b/
   ];
+
+  // Wording that identifies a parcel as something other than a house. Only used
+  // to tell "this county's vocabulary is one we know" from "this county writes
+  // codes we cannot interpret" -- isUsableResidential decides what is kept.
+  var NON_RESIDENTIAL_DESC = [
+    /\bVACANT/, /\bAGRICULT/, /\bFARM/, /\bCOMMERCIAL/, /\bCOM\b/, /\bINDUSTR/,
+    /\bEXEMPT/, /\bUTIL/, /\bOTHER\b/, /\bCAMP/, /\bLAND\b/,
+    // "APART" is how several counties abbreviate an apartment block, and it is
+    // not the same thing as the "APARTMENT" a single residence is labelled.
+    /\bAPART\b/, /\bOFFICE/,
+    /^COMM-/, /^APT-/, /\bRELIGIOUS/, /\bGOVERNMENT/, /\bCEMETERY/, /\bPARKING\b/,
+    /\bSOLAR FARM/, /\bSOLAR\b/, /\bCONSERVATION\b/, /\bFIRE DEPT\b/,
+    /\bEDUCATIONAL/, /\bHOSPITAL/, /\bMEDICAL\b/, /\bBANK/, /\bHOTEL\b/, /\bMOTEL\b/,
+    /\bWAREHOUSE/, /\bRESTAURANT/, /\bRETAIL\b/, /\bSTRIP\b/, /\bSUPERMARKET/,
+    /\bGROCERY/, /\bCONVENIENCE/, /\bGOLF\b/, /\bTRAILER PARK/, /\bKENNEL/,
+    /\bRESTAURANT\b/, /\bRETAIL\b/, /\bSHOPPING/, /\bMARKET/, /\bAUTOMOTIVE/,
+    /\bLOW INCOME\b/, /\bFAST FOOD\b/, /\bAUTO DEALER/, /\bPACKING HOUSE/, /\bLUMBER\b/,
+    /\bGARAGE/, /\bWINERY/, /\bLODGING/, /\bWAREHOUSE/
+  ];
+
+  function readsAsResidential(attrs) {
+    // Where a county populates both fields they can contradict each other, and
+    // Henderson's `parusecode` is the odd one out: it pairs "INDUSTRIAL" and
+    // "RESTAURANTS" with "RES-SINGLE FAMILY", so it records what is on the parcel
+    // rather than what the parcel is. `parusedesc` is the classification, so a
+    // description that says anything at all settles it and the code is only read
+    // when the county leaves the description blank.
+    var desc = String((attrs && attrs.parusedesc) || "").toUpperCase();
+    if (desc.trim()) {
+      // A commercial or affordable-housing prefix outranks whatever the rest of
+      // the label says, or "COMM-CONDO" would be read as a house on the strength
+      // of the CONDO in it.
+      if (/^(COMM|APT)-|^LOW INCOME\b/.test(desc)) return false;
+      return RESIDENTIAL_DESC.some(function (re) { return re.test(desc); });
+    }
+    var code = String((attrs && attrs.parusecode) || "").toUpperCase().trim();
+    // The code is read as a label, not as a code, so a word that happens to start
+    // with R ("RESTAURANTS", "RETAIL BUILDINGS") is not a house.
+    return code.indexOf("R") === 0 && !NON_RESIDENTIAL_DESC.some(function (re) { return re.test(code); });
+  }
+
+  function readsAsNonResidential(attrs) {
+    // Same vocabulary, whichever field the county put it in: Henderson's
+    // parusecode carries "RESTAURANTS", "RETAIL BUILDINGS" and "OFFICES", so a
+    // parcel with a blank description is still readable.
+    var desc = String((attrs && attrs.parusedesc) || "").toUpperCase().trim();
+    if (desc) return NON_RESIDENTIAL_DESC.some(function (re) { return re.test(desc); });
+    var code = String((attrs && attrs.parusecode) || "").toUpperCase().trim();
+    return !!code && NON_RESIDENTIAL_DESC.some(function (re) { return re.test(code); });
+  }
+
   function isUsableResidential(attrs) {
     var v = Number(attrs && attrs.parval);
-    var code = String((attrs && attrs.parusecode) || "").toUpperCase();
-    var desc = String((attrs && attrs.parusedesc) || "").toUpperCase();
-    var residential = code.indexOf("R") === 0 || RESIDENTIAL_DESC.some(function (re) { return re.test(desc); });
-    return isFinite(v) && v > 0 && residential;
+    return isFinite(v) && v > 0 && readsAsResidential(attrs);
   }
 
   // Counties where the state parcel service publishes no site address, so a
@@ -380,6 +435,126 @@
     add([text]);
     return out;
   }
+
+  // ---- the statewide NG9-1 address layer -------------------------------------
+  //
+  // `siteadd` is one free-text field, and 59 counties pad it with a run of two or
+  // more spaces -- New Hanover writes "5223␣␣LONE␣EAGLE␣CT" -- which no LIKE
+  // pattern built from single-spaced input can match, because a pattern cannot
+  // reach across a wider gap. ArcGIS refuses REPLACE() and TRIM() in a where
+  // clause, so the gap cannot be closed in the query either.
+  //
+  // AddressNC holds the same addresses as separate, whitespace-free fields, so
+  // the address is matched there and the parcel is then found by point-in-polygon
+  // against the parcel polygons. docs/address-search-whitespace.md has the
+  // per-county scan. This route is only reached once the `siteadd` ladder has
+  // missed, so nothing that answers today changes path, and `siteadd` remains the
+  // address shown on the receipt.
+  var ADDRESS_NC_FIELDS = "add_number,st_predir,st_name,countyfips,long,lat";
+
+  // The layer's LIKE is case-sensitive even through UPPER() -- 'LONE EAGLE'
+  // matches, 'lone eagle' does not -- so every pattern it is given is upper-cased.
+  // Single quotes are doubled, so a name containing one cannot end the literal.
+  function upperLiteral(value) {
+    return String(value == null ? "" : value).toUpperCase().replace(/'/g, "''");
+  }
+
+  // The pre-direction as the layer may spell it. Counties disagree: Mecklenburg
+  // writes EAST where New Hanover leaves the field blank, so both are asked for.
+  function predirSpellings(token) {
+    var short = upperLiteral(token);
+    var long = LONG_DIRECTION[token];
+    return long ? [short, upperLiteral(long)] : [short];
+  }
+
+  /**
+   * Split a typed street line into the parts the address layer holds separately.
+   *
+   * `add_number` is matched exactly and `st_name` as a substring, so a query
+   * missing either one is either meaningless or an unconstrained scan: nothing is
+   * returned unless a house number and a street name both survive. The street type
+   * is taken off the end because the layer keeps it in its own field, and the
+   * house number is returned with its leading digits alone so a letter suffix can
+   * be absorbed by a looser rung.
+   */
+  function parseAddressParts(raw) {
+    var text = String(raw == null ? "" : raw).replace(/\s+/g, " ").trim();
+    if (!text) return null;
+
+    var tokens = dropUnitTail(tokenize(streetLine(text)));
+    if (tokens.length < 2) return null;
+    var number = tokens[0];
+    if (!/^\d+[A-Z-]*$/.test(number)) return null;
+
+    var rest = tokens.slice(1);
+    var predir = rest.length > 1 && DIRECTIONS[rest[0]] ? rest[0] : null;
+    if (predir) rest = rest.slice(1);
+    // The street type only comes off a name with something in front of it, and
+    // what is left alone is spelled out, because a street can be named after a
+    // word the abbreviation table folds and the address layer stores the name
+    // spelled out: New Hanover's "3811 NORTHEAST AVE" is Northeast Avenue, and
+    // Chatham's "111 LANE ST" is Lane Street.
+    if (predir && rest.length === 1 && SUFFIX_LOOKUP[rest[0]]) {
+      rest = [LONG_DIRECTION[predir]];
+      predir = null;
+    }
+    if (rest.length > 1 && SUFFIX_LOOKUP[rest[rest.length - 1]]) rest = rest.slice(0, -1);
+    if (rest.length === 1) rest = [spellOut(rest)[0]];
+    if (!rest.length) return null;
+
+    return {
+      number: number,
+      digits: number.match(/^\d+/)[0],
+      predir: predir,
+      name: rest.join(" ")
+    };
+  }
+
+  /**
+   * The rungs to try against the address layer, narrowest first: the street name
+   * as stored, then as a substring, then without the pre-direction, then with the
+   * house number matched loosely enough to absorb a letter suffix.
+   *
+   * Nothing filters on the street type, because the counties disagree about it as
+   * well -- the same address is CT in `siteadd` and COURT in the address layer --
+   * and a house number plus a street name is narrow enough that the candidate list
+   * can separate one answer from another. `countyFips` is the five-digit code, or
+   * nothing to search statewide.
+   */
+  function buildAddressNcQueries(parts, countyFips) {
+    if (!parts) return [];
+    var scope = countyFips
+      ? "countyfips='" + upperLiteral(String(countyFips).slice(2)) + "' AND "
+      : "";
+    var numberEq = "add_number='" + upperLiteral(parts.number) + "'";
+    var numberLike = "add_number LIKE '" + upperLiteral(parts.digits) + "%'";
+    var nameEq = "UPPER(st_name) = UPPER('" + upperLiteral(parts.name) + "')";
+    var nameLike = "UPPER(st_name) LIKE UPPER('%" + upperLiteral(parts.name) + "%')";
+    var dir = parts.predir
+      ? "st_predir IN (" + predirSpellings(parts.predir).map(function (d) {
+          return "'" + d + "'";
+        }).join(",") + ") AND "
+      : "";
+
+    var queries = [];
+    var seen = {};
+    var add = function (sql) {
+      if (seen[sql]) return;
+      seen[sql] = true;
+      queries.push(scope + sql);
+    };
+    if (dir) {
+      add(numberEq + " AND " + dir + nameEq);
+      add(numberEq + " AND " + dir + nameLike);
+    }
+    add(numberEq + " AND " + nameLike);
+    if (parts.digits !== parts.number) {
+      add(numberLike + " AND " + nameEq);
+      add(numberLike + " AND " + nameLike);
+    }
+    return queries;
+  }
+
   /**
    * The residential filter.
    *
@@ -394,15 +569,32 @@
    * is the only test available, so a house with a value and a blank improvement
    * field was being reported as no match.
    */
+  // Counties whose land-use field is a constant rather than a classification.
+  // Duplin writes "VACANT LAND" on all 43,273 of its addressed parcels and Surry
+  // "Vacant" on all 44,417, houses with six-figure improvements included, so the
+  // field distinguishes nothing and cannot be used to reject anything. Reading it
+  // as a classification empties the county: every address in both was reported as
+  // "no matches found". These fall back to the improvement figure like the
+  // counties that publish no land-use data at all. Keyed on FIPS so a rename
+  // cannot silently change it.
+  var UNUSABLE_LAND_USE_FIPS = ["37061", "37171"];   // Duplin, Surry
+
   function keepResidential(feats, exact) {
-    var hasUseData = feats.some(function (a) {
-      return String(a.parusecode || "").trim() || String(a.parusedesc || "").trim();
-    });
-    if (hasUseData) {
-      return feats.filter(isUsableResidential);
-    }
     return feats.filter(function (a) {
-      return Number(a.parval) > 0 && (exact || Number(a.improvval) > 0);
+      if (Number(a.parval) <= 0) return false;
+      var fips = String((a && a.stcntyfips) || "");
+      if (fips && UNUSABLE_LAND_USE_FIPS.indexOf(fips) !== -1) {
+        return exact || Number(a.improvval) > 0;
+      }
+      // A label we can read settles it: a house is kept, anything the lists
+      // identify as commercial, vacant or exempt is not.
+      if (readsAsResidential(a) || readsAsNonResidential(a)) return isUsableResidential(a);
+      // A label we cannot read is the county's, not ours. Mitchell writes "511"
+      // and Catawba writes "03" with no legend anywhere in the layer, so there is
+      // nothing to test the parcel against and the improvement figure is the only
+      // signal left that a house was built on it. A county route is already exact,
+      // so the county having listed the address is enough there.
+      return exact || Number(a.improvval) > 0;
     });
   }
 
@@ -411,6 +603,11 @@
     computeReceipt: computeReceipt,
     buildAddressWhere: buildAddressWhere,
     buildQueryVariants: buildQueryVariants,
+    readsAsResidential: readsAsResidential,
+    ADDRESS_NC: ADDRESS_NC,
+    ADDRESS_NC_FIELDS: ADDRESS_NC_FIELDS,
+    parseAddressParts: parseAddressParts,
+    buildAddressNcQueries: buildAddressNcQueries,
     isUsableResidential: isUsableResidential,
     keepResidential: keepResidential,
     hasParcelAddress: hasParcelAddress,

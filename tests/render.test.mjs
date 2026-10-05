@@ -50,6 +50,10 @@ function oneMap(parcel) {
 const VALUE = 500000;
 const MECK = { value: VALUE, stcntyfips: "37119", cntyfips: "119" };
 
+/** The statewide address file answering with `rows` of attributes. */
+const addressRows = (rows = []) =>
+  JSON.stringify({ features: rows.map((a) => ({ attributes: a })) });
+
 /** URLSearchParams bodies are form-encoded; assertions read the decoded form. */
 const form = (body) => decodeURIComponent(String(body).replace(/\+/g, " "));
 
@@ -78,9 +82,12 @@ function likeService(siteadd) {
  *
  * `parcels` may be a response string, or a function receiving the request body
  * and returning one, so a test can answer per query and watch the app fall
- * through its ladder of address forms.
+ * through its ladder of address forms. `address` stubs the statewide NG9-1
+ * address file, `polygon` the parcel polygons an address point is resolved
+ * against; both default to "nothing there" so a test that is not about them
+ * cannot pass by accident.
  */
-function boot({ billHtml, parcels = oneMap(MECK), label = "" } = {}) {
+function boot({ billHtml, parcels = oneMap(MECK), address, polygon, label = "" } = {}) {
   const dom = new JSDOM(`<!DOCTYPE html><html><body>${billHtml ?? render()}</body></html>`, {
     runScripts: "outside-only",
     pretendToBeVisual: true,
@@ -94,8 +101,16 @@ function boot({ billHtml, parcels = oneMap(MECK), label = "" } = {}) {
     if (u.includes("benchmarks.json")) {
       return Promise.resolve({ json: () => Promise.resolve(BENCHMARKS) });
     }
+    if (u.includes("NC1Map_Addresses")) {
+      const stub = address == null ? addressRows() : address;
+      const body = typeof stub === "function" ? stub(opts && opts.body) : stub;
+      return Promise.resolve({ text: () => Promise.resolve(body) });
+    }
     if (u.includes("MapServer")) {
-      const body = typeof parcels === "function" ? parcels(opts && opts.body) : parcels;
+      // Layer 1 is the parcel polygons a point is resolved against; layer 0 is
+      // the address search. Both answer with parcels, so they share a default.
+      const stub = u.includes("MapServer/1/") && polygon != null ? polygon : parcels;
+      const body = typeof stub === "function" ? stub(opts && opts.body) : stub;
       return Promise.resolve({ text: () => Promise.resolve(body) });
     }
     return Promise.reject(new Error("unexpected fetch: " + u));
@@ -138,15 +153,65 @@ test("the app boots, mounts an instance, and populates the county list", async (
   assert.ok(labels.includes("Mecklenburg County"));
 });
 
+/** Choose a county, which the address bar now requires before it unlocks. */
+const pick = async (el, slug) => {
+  const select = el.querySelector(".ptx-select");
+  select.value = slug;
+  select.dispatchEvent(new select.ownerDocument.defaultView.Event("change"));
+  await new Promise((res) => setTimeout(res, 0));
+};
+
 /* ---------------------------------------------------------------------------
  * The happy path, with the real county numbers
  * ------------------------------------------------------------------------ */
+
+test("the address bar stays locked until a county is chosen", async () => {
+  // A street name is not unique -- 25 counties carry a Dandelion Lane -- so the
+  // tool no longer guesses the county from the address and shows a receipt at
+  // whatever county it happened to match first.
+  const { doc, settle, calls } = boot();
+  await settle();
+  const r = root(doc);
+
+  assert.equal($(r, ".ptx-input").disabled, true, "the address box is locked on load");
+  assert.equal($(r, ".ptx-btn").disabled, true, "and so is the button");
+  assert.match($(r, ".ptx-hint").textContent, /^Choose your county first/,
+    "the disclosure under the box says what to do");
+
+  await pick(r, "mecklenburg");
+  assert.equal($(r, ".ptx-input").disabled, false, "choosing a county unlocks it");
+  assert.equal($(r, ".ptx-btn").disabled, false);
+
+  // Putting the placeholder back locks it again, so the address is not searched
+  // against a county the reader has not chosen.
+  await pick(r, "");
+  assert.equal($(r, ".ptx-input").disabled, true, "clearing the county locks it again");
+  assert.equal($(r, ".ptx-btn").disabled, true);
+
+  const searched = calls.filter((c) => c.url.includes("MapServer"));
+  assert.deepEqual(searched, [], "and nothing was searched along the way");
+});
+
+test("a locked address box cannot be searched through the keyboard", async () => {
+  const { doc, settle, calls } = boot();
+  await settle();
+  const r = root(doc);
+  const ev = new (doc.defaultView.KeyboardEvent)("keydown", { key: "Enter", bubbles: true });
+
+  $(r, ".ptx-input").value = "1000 E Woodlawn Rd";
+  $(r, ".ptx-input").dispatchEvent(ev);
+  await settle();
+
+  assert.deepEqual(calls.filter((c) => c.url.includes("MapServer")), [],
+    "Enter with no county chosen does not reach the service");
+});
 
 test("searching an address lists candidates and renders a correct receipt", async () => {
   const { doc, settle, calls } = boot();
   await settle();
   const r = root(doc);
 
+  await pick(r, "mecklenburg");
   $(r, ".ptx-input").value = "1000 E Woodlawn Rd";
   $(r, ".ptx-btn").click();
   await settle();
@@ -187,11 +252,13 @@ test("searching an address lists candidates and renders a correct receipt", asyn
   assert.ok(!(r.querySelector(".ptx-address-body").classList.contains("ptx-hidden")), "receipt body shown");
   assert.ok($(r, ".ptx-below").classList.contains("ptx-hidden"), "no below-benchmark note");
 
+  // The county was chosen, so there is one scoped query and no statewide probe
+  // to guess the county from the address.
   const onemap = calls.filter((c) => c.url.includes("MapServer"));
-  assert.equal(onemap.length, 2, "one statewide probe to infer the county, one scoped query");
-  assert.match(form(onemap[0].body), /stcntyfips LIKE '37%'/);
-  assert.match(form(onemap[1].body), /stcntyfips = '37119'/);
-  assert.match(form(onemap[1].body), /resultRecordCount=40/);
+  assert.equal(onemap.length, 1, "one scoped query, no inference probe");
+  assert.match(form(onemap[0].body), /stcntyfips = '37119'/);
+  assert.match(form(onemap[0].body), /resultRecordCount=40/);
+  assert.ok(!onemap.some((c) => /stcntyfips LIKE/.test(form(c.body))), "nothing searches statewide");
 });
 
 test("an explicit county selection skips the statewide probe", async () => {
@@ -221,13 +288,33 @@ test("an explicit county selection skips the statewide probe", async () => {
  * ------------------------------------------------------------------------ */
 
 /** The address forms the app actually put on the wire, in order. */
-const patterns = (calls) => calls.filter((c) => c.url.includes("MapServer")).map((c) => likeQuery(c.body));
+/**
+ * The parcel layer's own address ladder: the LIKE patterns, in the order sent.
+ * Layer 0 is the address search; layer 1 is the polygon a point is resolved
+ * against and has no pattern to read.
+ */
+const patterns = (calls) =>
+  calls
+    .filter((c) => c.url.includes("NC1Map_Parcels/MapServer/0/"))
+    .map((c) => likeQuery(c.body));
+
+/** The statewide address-file queries, in the order sent. */
+const ng91 = (calls) =>
+  calls.filter((c) => c.url.includes("NC1Map_Addresses")).map((c) => whereOf(c.body));
+
+/** One decoded request parameter, wherever it appears in the form body. */
+const whereOf = (body) => {
+  const m = form(body).match(/(?:^|&)where=(.*?)(?:&|$)/);
+  return m ? m[1] : null;
+};
 
 test("a full postal address from browser autofill still finds the parcel", async () => {
   const { doc, settle, calls } = boot({ parcels: likeService("1000 E WOODLAWN RD") });
   await settle();
   const r = root(doc);
 
+  await pick(r, "mecklenburg");
+  await pick(r, "mecklenburg");
   $(r, ".ptx-input").value = "1000 E Woodlawn Rd, Charlotte, NC 28203";
   $(r, ".ptx-btn").click();
   await settle();
@@ -235,10 +322,10 @@ test("a full postal address from browser autofill still finds the parcel", async
   const cands = $(r, ".ptx-cands").querySelectorAll("li");
   assert.equal(cands.length, 1, "the parcel is found");
   assert.match(cands[0].textContent, /1000 E WOODLAWN RD/);
-  assert.equal($(r, ".ptx-select").value, "mecklenburg", "county inferred from the address");
+  assert.equal($(r, ".ptx-select").value, "mecklenburg", "the county the reader chose is still the one in force");
 
   const sent = patterns(calls);
-  assert.deepEqual(sent, ["1000 E WOODLAWN RD", "1000 E WOODLAWN RD"], "street line only, both queries");
+  assert.deepEqual(sent, ["1000 E WOODLAWN RD"], "street line only");
   assert.ok(!sent.some((p) => /28203|CHARLOTTE/.test(p)), "city and ZIP never reach the query");
 });
 
@@ -247,12 +334,13 @@ test("a pasted address with no commas drops the city, state and ZIP", async () =
   await settle();
   const r = root(doc);
 
+  await pick(r, "mecklenburg");
   $(r, ".ptx-input").value = "1000 E Woodlawn Rd Charlotte NC 28203";
   $(r, ".ptx-btn").click();
   await settle();
 
   assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1, "the parcel is found");
-  assert.deepEqual(patterns(calls), ["1000 E WOODLAWN RD", "1000 E WOODLAWN RD"]);
+  assert.deepEqual(patterns(calls), ["1000 E WOODLAWN RD"]);
 });
 
 test("a spelled-out suffix and direction find the abbreviated street", async () => {
@@ -376,6 +464,193 @@ test("a service error on the first rung is not mistaken for a miss", async () =>
 });
 
 /* ---------------------------------------------------------------------------
+ * Counties whose parcel address is padded
+ *
+ * 59 counties write `siteadd` with a run of two or more spaces, so no LIKE
+ * pattern built from single-spaced input can match it and an address that
+ * plainly exists reads as no match. The app then looks the address up in the
+ * statewide NG9-1 address file, whose fields are clean, and takes the parcel
+ * whose polygon contains that point. Every answer below is a real query and
+ * response from the two services.
+ * ------------------------------------------------------------------------ */
+
+/** New Hanover's parcel: "5223  LONE  EAGLE CT", two spaces after the number. */
+const NH_PARCEL = {
+  parno: "3134-85-7054.000",
+  siteadd: "5223  LONE EAGLE CT",
+  parval: 630400,
+  parvaltype: "0",
+  parusecode: "RES",
+  parusedesc: "Residential",
+  improvval: 451700,
+  stcntyfips: "37129",
+  cntyfips: "129",
+};
+
+const LONE_EAGLE = {
+  add_number: "5223",
+  st_predir: null,
+  st_name: "LONE EAGLE",
+  st_postyp: "COURT",
+  countyfips: "129",
+  long: 2338730.0,
+  lat: 145081.578125,
+};
+
+/** The parcel layer refuses every pattern, the way it does for a padded county. */
+const padded = () => JSON.stringify({ features: [] });
+const nhParcel = () => JSON.stringify({ features: [{ attributes: NH_PARCEL }] });
+
+test("a padded county's address is found through the state address file", async () => {
+  const { doc, settle, calls } = boot({
+    parcels: padded,
+    address: addressRows([LONE_EAGLE]),
+    polygon: nhParcel,
+  });
+  await settle();
+  const r = root(doc);
+
+  await pick(r, "new-hanover");
+  $(r, ".ptx-input").value = "5223 Lone Eagle Lane";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1, "the parcel is found");
+  assert.match($(r, ".ptx-cands").textContent, /5223\s+LONE EAGLE CT/, "the parcel's own address is shown");
+  assert.equal($(r, ".ptx-select").value, "new-hanover", "and the chosen county is still in force");
+
+  // The parcel layer was asked first and the address file only after it missed,
+  // so nothing that answers on `siteadd` changes route.
+  assert.deepEqual(
+    patterns(calls),
+    ["5223 LONE EAGLE LN", "5223 LONE EAGLE", "5223 Lone Eagle Lane"],
+    "the parcel ladder runs first and misses"
+  );
+  assert.deepEqual(
+    ng91(calls),
+    ["countyfips='129' AND add_number='5223' AND UPPER(st_name) LIKE UPPER('%LONE EAGLE%')"],
+    "then the address file, scoped to the chosen county"
+  );
+
+  const cands = $(r, ".ptx-cands").querySelectorAll("li");
+  cands[0].dispatchEvent(new (doc.defaultView.MouseEvent)("click", { bubbles: true }));
+  await settle();
+
+  const nh = BENCHMARKS["new-hanover"];
+  const paid = (630400 * nh.act) / nh.x;
+  assert.equal($(r, ".ptx-receipt-addr").textContent, "5223  LONE EAGLE CT");
+  assert.equal($(r, ".ptx-amt-paid").textContent, money(paid));
+  assert.equal($(r, ".ptx-amt-saved").textContent, money(paid * nh.savings_rate));
+  assert.equal($(r, ".ptx-receipt-total-pct").textContent, `OR ${Math.round(100 * nh.savings_rate)}% lower`);
+});
+
+test("the address file is never consulted when the parcel address answers", async () => {
+  const { doc, settle, calls } = boot({ parcels: likeService("1000 E WOODLAWN RD") });
+  await settle();
+  const r = root(doc);
+
+  await pick(r, "mecklenburg");
+  $(r, ".ptx-input").value = "1000 E Woodlawn Rd";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1);
+  assert.deepEqual(ng91(calls), [], "one extra source, but no extra request");
+});
+
+test("an address the parcel layer will not search still resolves once the county is known", async () => {
+  const { doc, settle, calls, window } = boot({
+    parcels: padded,
+    address: addressRows([LONE_EAGLE]),
+    polygon: nhParcel,
+  });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "new-hanover";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  $(r, ".ptx-input").value = "5223 Lone Eagle Ct";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1);
+  assert.deepEqual(
+    ng91(calls),
+    ["countyfips='129' AND add_number='5223' AND UPPER(st_name) LIKE UPPER('%LONE EAGLE%')"],
+    "scoped to the chosen county"
+  );
+});
+
+test("a condominium stack resolves to one parcel, not one per unit", async () => {
+  // Mecklenburg lists 1000 E WOODLAWN once per unit, all at the same point.
+  const unit = (u) => ({
+    add_number: "1000",
+    st_predir: "EAST",
+    st_name: "WOODLAWN",
+    st_postyp: "ROAD",
+    unit: u,
+    countyfips: "119",
+    long: 1443819.0,
+    lat: 522846.65625,
+  });
+  const meck = (p) => JSON.stringify({ features: [{ attributes: { ...p, parval: VALUE, parusecode: "R", parusedesc: "SINGLE FAMILY", improvval: 250000, stcntyfips: "37119", cntyfips: "119" } }] });
+  const { doc, settle, calls, window } = boot({
+    parcels: padded,
+    address: addressRows([unit(null), unit("202"), unit("203")]),
+    polygon: () => meck(MECK),
+  });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  $(r, ".ptx-input").value = "1000 E Woodlawn Rd";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 1, "one parcel, offered once");
+  const polygonCalls = calls.filter((c) => c.url.includes("MapServer/1/"));
+  assert.equal(polygonCalls.length, 1, "the three rows share a point, so the parcel is looked up once");
+  // Mecklenburg spells the direction out, so both spellings are asked for.
+  assert.match(ng91(calls)[0], /st_predir IN \('E','EAST'\)/);
+});
+
+test("an address point inside no parcel is not reported as a match", async () => {
+  // A point on a shared boundary answers with more than one parcel, or with none;
+  // either way the tool cannot say which parcel was meant.
+  const { doc, settle, window } = boot({
+    parcels: padded,
+    address: addressRows([LONE_EAGLE]),
+    polygon: () => JSON.stringify({ features: [] }),
+  });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-select").value = "new-hanover";
+  $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
+  $(r, ".ptx-input").value = "5223 Lone Eagle Ln";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 0);
+  assert.ok(!$(r, ".ptx-nores").classList.contains("ptx-hidden"), "no-results note, not a false hit");
+});
+
+test("an address with no house number never reaches the address file", async () => {
+  // The layer matches the house number exactly, so a street name alone would be
+  // an unconstrained scan. Partial addresses are the parcel ladder's job.
+  const { doc, settle, calls } = boot({ parcels: likeService("1000 E WOODLAWN RD") });
+  await settle();
+  const r = root(doc);
+
+  $(r, ".ptx-input").value = "Woodlawn";
+  $(r, ".ptx-btn").click();
+  await settle();
+
+  assert.deepEqual(ng91(calls), []);
+});
+
+/* ---------------------------------------------------------------------------
  * Below-benchmark counties render the sentence, not a receipt
  * ------------------------------------------------------------------------ */
 
@@ -388,6 +663,7 @@ for (const slug of ["alamance", "moore"]) {
     await settle();
     const r = root(doc);
 
+    await pick(r, slug);
     $(r, ".ptx-input").value = "1 Main St";
     $(r, ".ptx-btn").click();
     await settle();
@@ -511,6 +787,7 @@ test("counties that ship no land-use data still match on improvement value", asy
   await settle();
   const r = root(doc);
 
+  await pick(r, "mecklenburg");
   $(r, ".ptx-input").value = "Home Rd";
   $(r, ".ptx-btn").click();
   await settle();
@@ -583,6 +860,7 @@ test("two shortcodes on one page stay independent", async () => {
 
   selA.value = "mecklenburg";
   selA.dispatchEvent(new a.ownerDocument.defaultView.Event("change"));
+  await pick(a, "mecklenburg");
   $(a, ".ptx-input").value = "1000 E Woodlawn Rd";
   $(a, ".ptx-btn").click();
   await settle();
@@ -604,6 +882,7 @@ test("search state resets when the county changes", async () => {
   await settle();
   const r = root(doc);
 
+  await pick(r, "mecklenburg");
   $(r, ".ptx-input").value = "1000 E Woodlawn Rd";
   $(r, ".ptx-btn").click();
   await settle();
@@ -625,6 +904,7 @@ test("empty input does not call the service", async () => {
   await settle();
   const r = root(doc);
 
+  await pick(r, "mecklenburg");
   $(r, ".ptx-input").value = "   ";
   $(r, ".ptx-btn").click();
   await settle();
@@ -648,6 +928,7 @@ test("layout=compact renders a single-column frame and still works", async () =>
   assert.equal($(r, ".ptx-receipt").className, "ptx-receipt", "the receipt keeps its own class");
 
   // The tool must still work in the compact frame.
+  await pick(r, "mecklenburg");
   $(r, ".ptx-input").value = "1000 E Woodlawn Rd";
   $(r, ".ptx-btn").click();
   await settle();

@@ -47,6 +47,10 @@ cp "$SRC/mu-plugin/ptx-loader.php" "$STAGE/"
 # the version is written down, and the loader's header is the one WordPress
 # shows in the admin when the tool is installed as a must-use plugin. They drifted
 # once already, so the build refuses to package a build where they disagree.
+# The version is written in four places: the plugin header, the VERSION constant
+# the class falls back on, the mu-plugin loader's header, and the npm package.
+# Only the first three were checked, and a release once shipped with the constant
+# left behind, so all four are pinned here.
 for v in "$SRC/mu-plugin/ptx-loader.php" "$SRC/package.json"; do
   got="$(grep -m1 -oE '(Version:[[:space:]]+|"version":[[:space:]]*")1\.[0-9]+\.[0-9]+' "$v" | grep -oE '1\.[0-9]+\.[0-9]+')"
   if [ "$got" != "$VERSION" ]; then
@@ -54,7 +58,12 @@ for v in "$SRC/mu-plugin/ptx-loader.php" "$SRC/package.json"; do
     exit 1
   fi
 done
-echo "  loader and package.json agree with the plugin ($VERSION)"
+got="$(grep -m1 -oE "const VERSION = '1\.[0-9]+\.[0-9]+'" "$SRC/nc-property-tax-bill.php" | grep -oE '1\.[0-9]+\.[0-9]+')"
+if [ "$got" != "$VERSION" ]; then
+  echo "  FAIL: the VERSION constant says $got, the plugin header is $VERSION" >&2
+  exit 1
+fi
+echo "  loader, VERSION constant and package.json agree with the plugin ($VERSION)"
 
 # --- syntax ----------------------------------------------------------------
 for f in "$STAGE/$PLUGIN_SLUG"/*.php "$STAGE/$PLUGIN_SLUG"/templates/*.php "$STAGE/ptx-loader.php"; do

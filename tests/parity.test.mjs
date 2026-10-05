@@ -188,16 +188,35 @@ test("the receipt's printed labels and framing are unchanged", () => {
     "*** THANK YOU ***",
     "Property Tax Receipt",
     "--Select a County--",
-    "Partial addresses are OK. Click or tap your address when it appears.",
+    // The hint is pinned in three parts because the emphasis is markup, not copy:
+    // the sentence has to stay bold and the caveat after it has to stay put.
+    "Partial addresses are OK.",
+    "<b>Click or tap your address when it appears.</b>",
+    "We may not be able to access data on recently built homes.",
   ]) {
     assert.ok(billTpl.includes(label) || pluginApp.includes(label), `missing receipt copy: ${label}`);
   }
+});
+
+test("the address bar requires a county in both placements", { skip: !hasDemo && "demo repo not present" }, () => {
+  // A street name is not unique -- 25 counties carry a Dandelion Lane -- so a
+  // guessed county would print a receipt at the wrong county's levy rate. Both
+  // the demo and the widget therefore lock the address bar until one is chosen.
+  for (const [name, markup] of [["plugin", billTpl], ["demo", read(DEMO, "index.html")]]) {
+    assert.match(markup, /class="ptx-input"[^>]*disabled|class="hint"/, `${name} ships a hint`);
+    assert.match(markup, /Choose your county first/, `${name} discloses the county comes first`);
+  }
+  assert.match(billTpl, /class="ptx-input"[^>]*\sdisabled/, "the widget box ships locked");
+  assert.match(read(DEMO, "index.html"), /id="addrInput"[^>]*\sdisabled/, "the demo box ships locked");
+  assert.ok(pluginApp.includes("setAddressEnabled"), "the widget unlocks it on selection");
+  assert.ok(read(DEMO, "index.html").includes("setAddressEnabled"), "the demo unlocks it on selection");
 });
 
 test("status and empty-state strings are unchanged", () => {
   for (const s of [
     "Searching…",
     "No residential matches found. Try a street name or house number, or choose your county above.",
+    "Choose your county above before entering an address.",
     "Search failed (source unavailable). Please try again.",
     "No residential properties matched. Check the spelling or try a nearby street name.",
     "The per-property comparison is unavailable for this county yet.",
@@ -218,6 +237,32 @@ test("the search contract and candidate cap are preserved", () => {
   assert.ok(pluginCalc.includes("Number(a.improvval) > 0"), "no-land-use-data fallback");
   assert.ok(pluginCalc.includes("keepResidential"), "the residential filter is shared, not per-app");
   assert.ok(pluginApp.includes('Math.round(100 * receipt.rate) + "% lower"'), "percent is the published rate");
+});
+
+test("the padded-address fallback ships in the widget too", { skip: !hasDemo && "demo repo not present" }, () => {
+  // 59 counties pad siteadd with extra spaces that no pattern can match, so the
+  // demo falls back to the statewide address layer and resolves the parcel from
+  // the point. Both apps must carry it, or the widget silently drops those
+  // counties while the page keeps them.
+  for (const [name, app] of [["plugin", pluginApp], ["demo", read(DEMO, "index.html")]]) {
+    assert.ok(app.includes("resolveAddressNc"), `${name} resolves the parcel from an address point`);
+    assert.ok(app.includes("PT.parseAddressParts"), `${name} uses the shared parser`);
+    assert.ok(app.includes("PT.buildAddressNcQueries"), `${name} uses the shared query ladder`);
+    assert.ok(app.includes("PT.hasParcelAddress"), `${name} keeps the county-level counties out`);
+  }
+  // The endpoint and the fields live in the shared calc.js, so they cannot drift.
+  assert.ok(pluginCalc.includes("AddressNC/NC1Map_Addresses/MapServer/0/query"), "address endpoint");
+  assert.equal(
+    pluginCalc.match(/ADDRESS_NC_FIELDS = "([^"]+)"/)[1],
+    read(DEMO, "calc.js").match(/ADDRESS_NC_FIELDS = "([^"]+)"/)[1],
+    "requested fields agree with the demo"
+  );
+  // The value still comes from the parcel layer and the address shown is still
+  // the parcel's own, so the receipt keeps a single source.
+  for (const [name, app] of [["plugin", pluginApp], ["demo", read(DEMO, "index.html")]]) {
+    assert.ok(/siteadd \|\| f\.ptxAddress/.test(app), `${name} still shows the parcel's own address`);
+    assert.ok(app.includes("NC1Map_Parcels/MapServer/1/query"), `${name} resolves the value from the parcel layer`);
+  }
 });
 
 test("the layout responds to its own column, not just the viewport", () => {

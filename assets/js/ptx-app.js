@@ -27,6 +27,14 @@
   var MAX_ADDRESS_ROWS = 8;  // same-named streets to try in a county layer
   var SHOWN_CAP_NOTE = 8;
 
+  // Counties whose site address cannot be matched by pattern route through the
+  // statewide NG9-1 address layer instead, and its coordinates are in the state
+  // plane -- the same reference the Avery route already resolves a parcel with.
+  var ADDRESS_NC_POINT = { lon: "long", lat: "lat", srs: 102719 };
+  // A condominium stack lists one address row per unit, all at the same point, so
+  // distinct points are counted rather than rows.
+  var MAX_NG91_POINTS = 6;
+
   var dataCache = {};
 
   var esc = function (s) {
@@ -94,9 +102,21 @@
     this.el.addressBody.classList.add("ptx-hidden");
   };
 
+  // A county has to be chosen before an address can be entered. The tool used to
+  // infer the county from the address itself, but a plain street name is not
+  // unique — 25 counties carry a Dandelion Lane and 10 carry an Asher Lane — and
+  // a wrong guess would print a receipt at the wrong county's levy rate.
+  // Requiring the choice removes that risk, so the address bar stays locked until
+  // there is one. The hint under the bar says so.
+  Bill.prototype.setAddressEnabled = function (on) {
+    this.el.input.disabled = !on;
+    this.el.button.disabled = !on;
+  };
+
   Bill.prototype.selectCounty = function (key) {
     this.selected = key || null;
     this.county = key ? this.benchmarks[key] : null;
+    this.setAddressEnabled(!!key);
     this.clearBill();
     this.showCountyLevel();
   };
@@ -299,19 +319,104 @@
     var self = this;
     return this.fetchAddressFeatures(queries, null).then(function (feats) {
       for (var i = 0; i < feats.length; i++) {
-        var sfips = String(feats[i].stcntyfips || "");
-        for (var k in self.benchmarks) {
-          if (self.benchmarks[k].fips === sfips) return k;
-        }
+        var key = self.countyKeyFromFips(feats[i].stcntyfips);
+        if (key) return key;
       }
       return null;
     });
+  };
+
+  /* ---- counties whose site address cannot be matched by pattern ------------
+   *
+   * 59 counties pad `siteadd` with a run of two or more spaces -- New Hanover
+   * writes "5223  LONE  EAGLE  CT" -- so no LIKE pattern built from single-spaced
+   * input can reach them and an address that plainly exists is reported as no
+   * match. The state parcel service refuses REPLACE() and TRIM() in a where
+   * clause, so the gap cannot be closed in the query either. The statewide NG9-1
+   * address layer holds the same addresses in separate, whitespace-free fields,
+   * so the address is matched there and the parcel is then found by
+   * point-in-polygon. The value still comes from the parcel layer, and `siteadd`
+   * still supplies the address displayed.
+   */
+
+  Bill.prototype.countyKeyFromFips = function (fips) {
+    var sfips = String(fips || "");
+    for (var k in this.benchmarks) {
+      if (this.benchmarks[k].fips === sfips) return k;
+    }
+    return null;
+  };
+
+  // The counties that report a county-level figure instead of a parcel keep doing
+  // so: the address layer does hold addresses for them, but printing a receipt
+  // there would contradict the message the tool already shows them.
+  function servesParcels(fips) {
+    return PT.hasParcelAddress({ fips: String(fips || "") });
+  }
+
+  // `fips` scopes the search to one county; without it the same-named street comes
+  // back from every county that has one, and each point is resolved in its own.
+  Bill.prototype.resolveAddressNc = function (fips, raw) {
+    var self = this;
+    var parts = PT.parseAddressParts(raw);
+    if (!parts) return Promise.resolve([]);
+
+    var queries = PT.buildAddressNcQueries(parts, fips);
+    var qi = 0;
+
+    var attempt = function () {
+      if (qi >= queries.length) return Promise.resolve([]);
+
+      var body = new URLSearchParams();
+      body.append("where", queries[qi++]);
+      body.append("outFields", PT.ADDRESS_NC_FIELDS);
+      body.append("f", "pjson");
+      body.append("returnGeometry", "false");
+      body.append("resultRecordCount", String(RESULT_LIMIT));
+      body.append("orderByFields", "countyfips");
+
+      return self.postForm(PT.ADDRESS_NC, body.toString()).then(function (rows) {
+        var seen = {};
+        var found = [];
+        var ri = 0;
+
+        var tryRow = function () {
+          // One parcel answers the question; the rest of the points are only worth
+          // asking when that one did not fall inside a single parcel.
+          if (ri >= rows.length || found.length || Object.keys(seen).length >= MAX_NG91_POINTS) {
+            return found.length ? found : attempt();
+          }
+
+          var row = rows[ri++];
+          var countyFips = "37" + String(row.countyfips || "");
+          var x = Number(row.long), y = Number(row.lat);
+          var point = x + "," + y;
+          if (!servesParcels(countyFips) || !isFinite(x) || !isFinite(y) || seen[point]) return tryRow();
+          seen[point] = true;
+
+          return self.parcelAtPoint(countyFips, row, ADDRESS_NC_POINT).then(function (hits) {
+            if (hits.length) found = found.concat(hits);
+            return tryRow();
+          });
+        };
+        return tryRow();
+      });
+    };
+    return attempt();
   };
 
   Bill.prototype.searchAddress = function (query) {
     var self = this;
     var q = (query || "").trim();
     if (!q) { this.setStatus(""); return Promise.resolve(); }
+    // The address bar is locked until a county is chosen, but never rely on the
+    // lock alone: Enter in a disabled box still reaches this handler in some
+    // browsers, and searching statewide is how a receipt ends up on the wrong
+    // county's rate.
+    if (!this.selected || !this.benchmarks[this.selected]) {
+      this.setStatus("Choose your county above before entering an address.");
+      return Promise.resolve();
+    }
 
     this.el.button.disabled = true;
     this.setStatus("Searching…");
@@ -321,6 +426,7 @@
 
     var done = function () { self.el.button.disabled = false; };
     var variants = PT.buildQueryVariants(q);
+    var feats = null;
 
     return Promise.resolve()
       .then(function () {
@@ -330,35 +436,59 @@
           .then(function (key) {
             if (key) return key;
             return self.inferCountyKey(variants).then(function (inferred) {
-              if (!inferred) {
-                self.setStatus("No residential matches found. Try a street name or house number, or choose your county above.");
-                return null;
+              if (inferred) {
+                self.el.select.value = inferred;
+                self.selectCounty(inferred);
+                return inferred;
               }
-              self.el.select.value = inferred;
-              self.selectCounty(inferred);
-              return inferred;
+              // A county that pads `siteadd` cannot be inferred from `siteadd`, so
+              // when that search finds nothing the statewide address layer is asked
+              // for the address itself, which also says which county it is in.
+              return self.resolveAddressNc(null, q).then(function (found) {
+                if (!found.length) {
+                  self.setStatus("No residential matches found. Try a street name or house number, or choose your county above.");
+                  return null;
+                }
+                feats = found;
+                var fromAddress = self.countyKeyFromFips(found[0].stcntyfips);
+                if (fromAddress) {
+                  self.el.select.value = fromAddress;
+                  self.selectCounty(fromAddress);
+                }
+                return fromAddress;
+              });
             });
           })
           .then(function (key) {
             if (!key) return;
             var fips = self.benchmarks[key].fips;
             var source = PT.parcelSource(fips);
+
             // A county the statewide layer cannot search answers from its own
             // service, and needs the raw query because the ladder is built for
-            // that county's own spelling of a street.
-            var lookup = source
-              ? self.resolveCountyParcel(source, fips, PT.buildCountyVariants(q, source.spelling === "long"))
-              : self.fetchAddressFeatures(variants, fips);
-            return lookup.then(function (feats) {
-              if (feats.length === 0) {
+            // that county's own spelling of a street. Where the parcel layer does
+            // publish an address but pads it, the address layer is the second try.
+            var lookup;
+            if (feats) {
+              lookup = Promise.resolve(feats);
+            } else if (source) {
+              lookup = self.resolveCountyParcel(source, fips, PT.buildCountyVariants(q, source.spelling === "long"));
+            } else {
+              lookup = self.fetchAddressFeatures(variants, fips).then(function (hits) {
+                return hits.length ? hits : self.resolveAddressNc(fips, q);
+              });
+            }
+
+            return lookup.then(function (found) {
+              if (found.length === 0) {
                 self.setStatus("");
                 self.el.nores.classList.remove("ptx-hidden");
                 return;
               }
-              self.renderCandidates(feats);
+              self.renderCandidates(found);
               self.setStatus(
-                feats.length + " residential match" + (feats.length > 1 ? "es" : "") +
-                (feats.length > SHOWN_CAP_NOTE ? " (showing first " + SHOWN_CAP_NOTE + ")." : ".")
+                found.length + " residential match" + (found.length > 1 ? "es" : "") +
+                (found.length > SHOWN_CAP_NOTE ? " (showing first " + SHOWN_CAP_NOTE + ")." : ".")
               );
             });
           });

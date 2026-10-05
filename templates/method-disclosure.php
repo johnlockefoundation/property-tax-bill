@@ -69,6 +69,8 @@ defined('ABSPATH') || exit;
           <dd>The savings rate above is measured across five years, but your receipt is a single year. A parcel's assessment can shift relative to the county tax base over time, so adding up five years would assume a fixed share of a bill you never paid. FY2025&ndash;26 is compared on the current assessment.</dd>
           <dt>Property value</dt>
           <dd>Your receipt uses the parcel's current assessed value from NC OneMap. Reassessment timing is not modeled: where a county has revalued since the base year, the figure moves with the county's newer assessment.</dd>
+          <dt>Finding your parcel</dt>
+          <dd>We match what you type against the address stored on the parcel record. Fifty-nine counties store that address with extra spaces in it, which no search can match, so in those counties we look the address up in the state's NG 9-1 address file instead and take the parcel that sits at that point. Either way the value, and the address printed on your receipt, come from the one parcel record.</dd>
         </dl>
 
                 <p class="ptx-sources">Sources: county levy data (Data(tax).csv), NCDOR LG04 FY2025-26 assessed valuation, NC OneMap parcels, OSBM certified county population estimates, and BLS South urban CPI.</p>
