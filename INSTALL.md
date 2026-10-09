@@ -50,8 +50,14 @@ by design rather than by fault:
   county's own service rather than the statewide one, so a site with a strict
   `Content-Security-Policy` can fail these while every other county still works. Test one
   address in each.
-- **Franklin, Hoke, Perquimans or Richmond** — no receipt. The tool explains why and
-  reports the county's savings rate instead. That is the intended result, not a fault.
+- **Franklin, Hoke, Perquimans or Richmond** — no receipt. The tool explains why. Franklin
+  and Richmond are also at/below benchmark, so they show the no-savings sentence; Hoke and
+  Perquimans report the county's savings rate instead. That is the intended result, not a fault.
+- **Camden, Chowan or Yancey** — no receipt either. Their addresses resolve, but the parcel
+  layer carries no assessed value for them, so the tool also reports the county's savings
+  rate. Also intended, not a fault.
+- **39 counties at or below the benchmark** — including Alamance, Franklin, Moore and
+  Richmond — search normally, but the answer is the no-savings sentence rather than a receipt.
 
 If a search fails with "Search failed (source unavailable)", the page is being blocked from
 reaching NC OneMap — see below.

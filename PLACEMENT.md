@@ -117,7 +117,7 @@ receipts in one article is confusing.
 | Check | Standalone | Article |
 | --- | --- | --- |
 | County dropdown fills with 100 counties | yes | yes |
-| A $500,000 Mecklenburg parcel shows $2,462.91 paid / $2,240.27 could have paid / $222.65 saved / OR 9% LOWER | yes | yes |
+| A $500,000 Durham parcel shows $2,811.53 paid / $2,665.05 could have paid / $146.48 saved / OR 5% LOWER | yes | yes |
 | An address search returns matches | yes | yes |
 | A receipt prints with a percent | yes | yes |
 | The tool fits the column with no horizontal scroll | full width | important |

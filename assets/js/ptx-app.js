@@ -121,20 +121,29 @@
     this.showCountyLevel();
   };
 
-  // Counties with no site address in the state parcel service cannot be
-  // matched to an individual parcel, so no receipt can be printed. The
-  // county-level savings rate is published for every county, so the reader
-  // still gets the finding rather than a dead end.
+  // Counties whose parcel records cannot yield a receipt: four the parcel layer
+  // cannot be matched to an address at all, and three more (Camden, Chowan,
+  // Yancey) whose addresses resolve but whose parcel layer carries no assessed
+  // value. The county-level savings rate is published for every county, so the
+  // reader still gets the finding rather than a dead end.
   Bill.prototype.showCountyLevel = function () {
     if (!this.county || PT.hasParcelAddress(this.county)) return;
     var nm = this.county.label.replace(/ County$/, "");
+    if (this.county.below_benchmark) {
+      this.el.below.textContent = "Property tax rate growth in " + nm + " County was below the " +
+        "maximum allowed under a levy limit, so this property would not have saved anything.";
+      this.el.below.classList.add("ptx-below-note");
+      this.el.below.classList.remove("ptx-hidden");
+      this.el.bill.classList.add("ptx-hidden");
+      this.el.results.classList.remove("ptx-hidden");
+      return;
+    }
     var pct = Math.round(this.county.savings_rate * 100);
-    var msg = "We do not have individual parcel data for " + nm +
-      " County, so we cannot print a receipt for your property. Our county-level " +
-      "analysis estimates that a property tax levy limit would have lowered property " +
-      "tax bills across " + nm + " County by about " + pct +
-      "% over the five years to " + this.county.period + ".";
-    this.el.below.textContent = msg;
+    var msg = "We cannot currently print a receipt for individual properties in " + esc(nm) +
+      " County. Our county-level analysis estimates that a property tax levy limit would have " +
+      "lowered property tax bills across " + esc(nm) + " County by about " +
+      '<span class="ptx-rate">' + pct + "%</span> over the five years to " + esc(this.county.period) + ".";
+    this.el.below.innerHTML = msg;
     this.el.below.classList.add("ptx-below-note");
     this.el.below.classList.remove("ptx-hidden");
     this.el.bill.classList.add("ptx-hidden");

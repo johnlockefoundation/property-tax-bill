@@ -71,11 +71,16 @@ defined('ABSPATH') || exit;
           <dd>Your receipt uses the parcel's current assessed value from NC OneMap. Reassessment timing is not modeled: where a county has revalued since the base year, the figure moves with the county's newer assessment.</dd>
           <dt>Finding your parcel</dt>
           <dd>We match what you type against the address stored on the parcel record. Fifty-nine counties store that address with extra spaces in it, which no search can match, so in those counties we look the address up in the state's NG 9-1 address file instead and take the parcel that sits at that point. Either way the value, and the address printed on your receipt, come from the one parcel record.</dd>
+          <dt>Counties without parcel values</dt>
+          <dd>Camden, Chowan and Yancey resolve a typed address to a parcel, but the parcel
+          layer records no assessed value for them, so a per-parcel receipt is not possible
+          there. They join Franklin, Hoke, Perquimans and Richmond, which publish no address
+          the search can match. Franklin and Richmond are also at/below benchmark, so they
+          get the no-savings sentence; the other five show the county-wide savings rate
+          instead of a receipt.</dd>
         </dl>
 
                 <p class="ptx-sources">Sources: county levy data (Data(tax).csv), NCDOR LG04 FY2025-26 assessed valuation, NC OneMap parcels, OSBM certified county population estimates, and BLS South urban CPI.</p>
-                <p>This is an estimate based on historical tax
-        <p class="ptx-sources">Sources: county levy data (Data(tax).csv), NCDOR LG04 FY2025-26 assessed valuation, NC OneMap parcels, OSBM certified county population estimates, and BLS South urban CPI.</p>
         <p>This is an estimate based on historical tax and property data and a hypothetical policy scenario. It is not an official tax assessment.</p>
       </div>
     </details>

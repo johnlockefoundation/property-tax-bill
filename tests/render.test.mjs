@@ -49,6 +49,10 @@ function oneMap(parcel) {
 
 const VALUE = 500000;
 const MECK = { value: VALUE, stcntyfips: "37119", cntyfips: "119" };
+// Mecklenburg and New Hanover are at/below benchmark, so a parcel there renders
+// the "no savings" sentence. Receipt rendering is exercised with Wake, which is
+// not flagged and takes the ordinary parcel-layer route.
+const WAKE = { value: VALUE, stcntyfips: "37183", cntyfips: "183" };
 
 /** The statewide address file answering with `rows` of attributes. */
 const addressRows = (rows = []) =>
@@ -210,11 +214,11 @@ test("a locked address box cannot be searched through the keyboard", async () =>
 });
 
 test("searching an address lists candidates and renders a correct receipt", async () => {
-  const { doc, settle, calls } = boot();
+  const { doc, settle, calls } = boot({ parcels: oneMap(WAKE) });
   await settle();
   const r = root(doc);
 
-  await pick(r, "mecklenburg");
+  await pick(r, "wake");
   $(r, ".ptx-input").value = "1000 E Woodlawn Rd";
   $(r, ".ptx-btn").click();
   await settle();
@@ -230,16 +234,16 @@ test("searching an address lists candidates and renders a correct receipt", asyn
 
   cands[0].click();
 
-  const meck = BENCHMARKS.mecklenburg;
+  const wake = BENCHMARKS.wake;
   const value = 500000;
-  const paid = (value * meck.act) / meck.x;
-  const rate = meck.savings_rate;
+  const paid = (value * wake.act) / wake.x;
+  const rate = wake.savings_rate;
 
   assert.equal($(r, ".ptx-receipt-addr").textContent, "1000 E WOODLAWN RD");
   assert.match($(r, ".ptx-receipt-meta").textContent, /Parcel 0170110/);
   assert.match($(r, ".ptx-receipt-meta").textContent, /Assessed value \$500,000/);
 
-  assert.equal($(r, ".ptx-receipt-brand").innerHTML, "2026 Mecklenburg County<br>Property Tax Receipt");
+  assert.equal($(r, ".ptx-receipt-brand").innerHTML, "2026 Wake County<br>Property Tax Receipt");
   assert.equal($(r, ".ptx-amt-paid").textContent, money(paid));
   assert.equal($(r, ".ptx-amt-could").textContent, money(paid * (1 - rate)));
   assert.equal($(r, ".ptx-amt-saved").textContent, money(paid * rate));
@@ -251,7 +255,7 @@ test("searching an address lists candidates and renders a correct receipt", asyn
   assert.ok(Math.abs(paid * rate - (paid - paid * (1 - rate))) < 1e-6, "saved reconciles with paid - could_have");
 
   // The county was inferred from the parcel and selected for the reader.
-  assert.equal($(r, ".ptx-select").value, "mecklenburg");
+  assert.equal($(r, ".ptx-select").value, "wake");
   assert.ok(!(r.querySelector(".ptx-address-body").classList.contains("ptx-hidden")), "receipt body shown");
   assert.ok($(r, ".ptx-below").classList.contains("ptx-hidden"), "no below-benchmark note");
 
@@ -259,7 +263,7 @@ test("searching an address lists candidates and renders a correct receipt", asyn
   // to guess the county from the address.
   const onemap = calls.filter((c) => c.url.includes("MapServer"));
   assert.equal(onemap.length, 1, "one scoped query, no inference probe");
-  assert.match(form(onemap[0].body), /stcntyfips = '37119'/);
+  assert.match(form(onemap[0].body), /stcntyfips = '37183'/);
   assert.match(form(onemap[0].body), /resultRecordCount=40/);
   assert.ok(!onemap.some((c) => /stcntyfips LIKE/.test(form(c.body))), "nothing searches statewide");
 });
@@ -539,12 +543,16 @@ test("a padded county's address is found through the state address file", async 
   cands[0].dispatchEvent(new (doc.defaultView.MouseEvent)("click", { bubbles: true }));
   await settle();
 
+  // New Hanover is at/below benchmark, so the parcel resolves through the state
+  // address file but the county renders the "no savings" sentence, not a receipt.
   const nh = BENCHMARKS["new-hanover"];
-  const paid = (630400 * nh.act) / nh.x;
-  assert.equal($(r, ".ptx-receipt-addr").textContent, "5223  LONE EAGLE CT");
-  assert.equal($(r, ".ptx-amt-paid").textContent, money(paid));
-  assert.equal($(r, ".ptx-amt-saved").textContent, money(paid * nh.savings_rate));
-  assert.equal($(r, ".ptx-receipt-total-pct").textContent, `OR ${Math.round(100 * nh.savings_rate)}% lower`);
+  assert.ok(nh.below_benchmark, "New Hanover is flagged");
+  assert.equal(
+    $(r, ".ptx-below").textContent,
+    "Property tax rate growth in New Hanover County was below the maximum allowed under a levy limit, so this property would not have saved anything."
+  );
+  assert.ok(!$(r, ".ptx-below").classList.contains("ptx-hidden"), "sentence shown");
+  assert.ok($(r, ".ptx-receipt").classList.contains("ptx-hidden"), "no receipt");
 });
 
 test("the address file is never consulted when the parcel address answers", async () => {
@@ -684,11 +692,12 @@ for (const slug of ["alamance", "moore"]) {
 }
 
 /* ---------------------------------------------------------------------------
- * Counties with no published site address: no receipt is possible, so the
- * county-level savings rate is reported instead of a dead end.
+ * Counties that cannot be served per parcel — no usable site address, or an
+ * address with no assessed value in the parcel layer. No receipt is possible,
+ * so the county-level savings rate is reported instead of a dead end.
  * ------------------------------------------------------------------------ */
 
-for (const slug of ["franklin", "hoke", "perquimans", "richmond"]) {
+for (const slug of ["camden", "chowan", "franklin", "hoke", "perquimans", "richmond", "yancey"]) {
   test(`${BENCHMARKS[slug].label} reports the county-level rate instead of a receipt`, async () => {
     const c = BENCHMARKS[slug];
     const { doc, settle, window } = boot();
@@ -700,14 +709,22 @@ for (const slug of ["franklin", "hoke", "perquimans", "richmond"]) {
     await settle();
 
     const name = c.label.replace(/ County$/, "");
-    const pct = Math.round(c.savings_rate * 100);
-    assert.equal(
-      $(r, ".ptx-below").textContent,
-      `We do not have individual parcel data for ${name} County, so we cannot print a ` +
-      `receipt for your property. Our county-level analysis estimates that a property tax ` +
-      `levy limit would have lowered property tax bills across ${name} County by about ` +
-      `${pct}% over the five years to ${c.period}.`
-    );
+    if (c.below_benchmark) {
+      // A negative rate cannot be spoken as "NN% lower", so these counties get
+      // the no-savings sentence even though no receipt is possible.
+      assert.equal(
+        $(r, ".ptx-below").textContent,
+        `Property tax rate growth in ${name} County was below the maximum allowed under a levy limit, so this property would not have saved anything.`
+      );
+    } else {
+      const pct = Math.round(c.savings_rate * 100);
+      assert.equal(
+        $(r, ".ptx-below").textContent,
+        `We cannot currently print a receipt for individual properties in ${name} County. Our ` +
+        `county-level analysis estimates that a property tax levy limit would have lowered ` +
+        `property tax bills across ${name} County by about ${pct}% over the five years to ${c.period}.`
+      );
+    }
     assert.ok(!$(r, ".ptx-below").classList.contains("ptx-hidden"), "message shown");
     assert.ok($(r, ".ptx-below").classList.contains("ptx-below-note"), "sentence case, not banner case");
     assert.ok($(r, ".ptx-receipt").classList.contains("ptx-hidden"), "no receipt");
@@ -736,11 +753,11 @@ test("switching away from a county-level-only county clears the message", async 
 });
 
 test("a normal county still gets the receipt flow, not the county message", async () => {
-  const { doc, settle, window } = boot();
+  const { doc, settle, window } = boot({ parcels: oneMap(WAKE) });
   await settle();
   const r = root(doc);
 
-  $(r, ".ptx-select").value = "mecklenburg";
+  $(r, ".ptx-select").value = "wake";
   $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
   await settle();
   assert.ok($(r, ".ptx-below").classList.contains("ptx-hidden"), "no county-level message");
@@ -749,7 +766,9 @@ test("a normal county still gets the receipt flow, not the county message", asyn
   $(r, ".ptx-btn").click();
   await settle();
   $(r, ".ptx-cands").querySelector("li").click();
-  assert.notEqual($(r, ".ptx-amt-saved").textContent, "$0.00", "receipt still computes");
+  const wake = BENCHMARKS.wake;
+  const paid = (500000 * wake.act) / wake.x;
+  assert.equal($(r, ".ptx-amt-saved").textContent, money(paid * wake.savings_rate), "receipt computes");
 });
 
 /* ---------------------------------------------------------------------------
@@ -890,13 +909,15 @@ test("search state resets when the county changes", async () => {
   $(r, ".ptx-btn").click();
   await settle();
   $(r, ".ptx-cands").querySelector("li").click();
-  assert.ok(!$(r, ".ptx-address-body").classList.contains("ptx-hidden"), "receipt visible");
+  // Mecklenburg is at/below benchmark, so the result is the "no savings" sentence.
+  assert.ok(!$(r, ".ptx-below").classList.contains("ptx-hidden"), "result shown");
 
   $(r, ".ptx-select").value = "durham";
   $(r, ".ptx-select").dispatchEvent(new window.Event("change"));
 
   assert.equal($(r, ".ptx-input").value, "", "address cleared");
   assert.equal($(r, ".ptx-cands").querySelectorAll("li").length, 0, "candidates cleared");
+  assert.ok($(r, ".ptx-below").classList.contains("ptx-hidden"), "result reset");
   assert.ok($(r, ".ptx-address-body").classList.contains("ptx-hidden"), "receipt reset");
   assert.ok(!$(r, ".ptx-receipt-instruction").classList.contains("ptx-hidden"), "instruction returns");
   assert.equal($(r, ".ptx-status").textContent, "");
@@ -966,7 +987,7 @@ test("[ptx_methodology] renders the notes inside the theme's page", () => {
   assert.equal(d.querySelectorAll("h2").length, 7);
   assert.match(d.querySelector("h1").textContent, /Methodology Notes/);
   assert.match(d.textContent, /savings_rate = \(Σ actual − Σ hypothetical\) \/ Σ actual/);
-  assert.match(d.textContent, /Alamance and Moore/);
+  assert.match(d.textContent, /Alamance, Franklin, Moore, and Richmond/);
   assert.match(d.textContent, /not an official tax assessment/);
 });
 

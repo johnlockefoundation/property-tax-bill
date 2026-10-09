@@ -48,22 +48,25 @@ have saved, as dollars and as a percent.
 It covers all 100 counties. County-wide property tax only — municipal, school and special
 district taxes are out of scope, and the receipt says so.
 
-Two counties (Alamance, Moore) are at or below the benchmark and get an explanation
-instead of a receipt.
+39 counties (including Alamance, Franklin, Moore and Richmond) are at or below the
+benchmark and get an explanation instead of a receipt.
 
 ### Where a receipt is not possible
 
-For 96 of the 100 counties the reader gets a receipt for their parcel. Four do not, and
-the tool says so rather than reporting a failed search:
+For 56 of the 100 counties the reader gets a receipt for their parcel. Two things stop a
+receipt, and the tool says so rather than reporting a failed search:
 
 | Situation | Counties | What the reader gets |
 | --- | --- | --- |
+| At or below the benchmark | 39, including Alamance, Franklin, Moore and Richmond | The no-savings sentence |
 | No parcel address is published anywhere the tool can reach | Franklin, Hoke, Perquimans, Richmond | The county's savings rate, and why there is no receipt |
-| Published, but only in a form the tool cannot rely on | — | — |
+| Address resolves, but the parcel layer carries no assessed value | Camden, Chowan, Yancey | The county's savings rate, and why there is no receipt |
 | Apartment blocks rather than an ordinary residence | any county, by parcel | No match |
 
-The four are decided by FIPS in `calc.js`, so a county moving between lists is a one-line
-change. The reader's address is never stored; see the note under the search box.
+Franklin and Richmond appear in two rows: they are county-level-only and at or below the
+benchmark, so they get the no-savings sentence rather than a rate. The seven are decided by
+FIPS in `calc.js`, so a county moving between lists is a one-line change. The reader's
+address is never stored; see the note under the search box.
 
 ## Methodology
 
