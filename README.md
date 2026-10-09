@@ -83,7 +83,7 @@ The calculation contract is unchanged:
 paid       = V * act / x
 could_have = paid * (1 - savings_rate)
 saved      = paid * savings_rate      # paid - could_have
-percent    = 100 * savings_rate       # the "NN% lower" figure
+percent    = 100 * savings_rate       # the "NN% lower" figure; kept as a fraction below 1%
 ```
 
 `assets/js/ptx-calc.js` is a **byte-identical copy** of the demo's `calc.js` and

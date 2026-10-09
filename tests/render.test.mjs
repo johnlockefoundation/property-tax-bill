@@ -214,7 +214,7 @@ test("a locked address box cannot be searched through the keyboard", async () =>
 });
 
 test("searching an address lists candidates and renders a correct receipt", async () => {
-  const { doc, settle, calls } = boot({ parcels: oneMap(WAKE) });
+  const { doc, settle, calls, window } = boot({ parcels: oneMap(WAKE) });
   await settle();
   const r = root(doc);
 
@@ -247,10 +247,10 @@ test("searching an address lists candidates and renders a correct receipt", asyn
   assert.equal($(r, ".ptx-amt-paid").textContent, money(paid));
   assert.equal($(r, ".ptx-amt-could").textContent, money(paid * (1 - rate)));
   assert.equal($(r, ".ptx-amt-saved").textContent, money(paid * rate));
-  assert.equal($(r, ".ptx-receipt-total-pct").textContent, `OR ${Math.round(100 * rate)}% lower`);
+  assert.equal($(r, ".ptx-receipt-total-pct").textContent, `OR ${window.PT.formatPercent(rate)}% lower`);
 
   // The published percentage and the dollars must agree, per the contract.
-  const printed = Number($(r, ".ptx-receipt-total-pct").textContent.match(/(\d+)%/)[1]);
+  const printed = Number($(r, ".ptx-receipt-total-pct").textContent.match(/([\d.]+)%/)[1]);
   assert.ok(Math.abs(printed - 100 * rate) <= 0.5, "printed percent is the published rate, rounded");
   assert.ok(Math.abs(paid * rate - (paid - paid * (1 - rate))) < 1e-6, "saved reconciles with paid - could_have");
 
@@ -266,6 +266,28 @@ test("searching an address lists candidates and renders a correct receipt", asyn
   assert.match(form(onemap[0].body), /stcntyfips = '37183'/);
   assert.match(form(onemap[0].body), /resultRecordCount=40/);
   assert.ok(!onemap.some((c) => /stcntyfips LIKE/.test(form(c.body))), "nothing searches statewide");
+});
+
+test("a sub-1% county prints the fractional percent, not a rounded 0%", async () => {
+  // Caldwell's five-year savings rate is 0.0039 -> 0.39%. A whole-percent
+  // round would print "OR 0% lower" next to a receipt that still shows saved
+  // dollars; the fraction keeps the display honest.
+  const CALD = { value: VALUE, stcntyfips: "37027", cntyfips: "027" };
+  const { doc, settle } = boot({ parcels: oneMap(CALD) });
+  await settle();
+  const r = root(doc);
+
+  await pick(r, "caldwell");
+  $(r, ".ptx-input").value = "1000 E Woodlawn Rd";
+  $(r, ".ptx-btn").click();
+  await settle();
+  $(r, ".ptx-cands").querySelector("li").click();
+
+  const caldwell = BENCHMARKS.caldwell;
+  assert.equal($(r, ".ptx-receipt-total-pct").textContent, "OR 0.39% lower");
+  assert.ok($(r, ".ptx-below").classList.contains("ptx-hidden"), "receipt shown, not the sentence");
+  const paid = (VALUE * caldwell.act) / caldwell.x;
+  assert.equal($(r, ".ptx-amt-saved").textContent, money(paid * caldwell.savings_rate));
 });
 
 test("an explicit county selection skips the statewide probe", async () => {

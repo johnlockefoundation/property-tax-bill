@@ -138,7 +138,7 @@
       this.el.results.classList.remove("ptx-hidden");
       return;
     }
-    var pct = Math.round(this.county.savings_rate * 100);
+    var pct = PT.formatPercent(this.county.savings_rate);
     var msg = "We cannot currently print a receipt for individual properties in " + esc(nm) +
       " County. Our county-level analysis estimates that a property tax levy limit would have " +
       "lowered property tax bills across " + esc(nm) + " County by about " +
@@ -583,7 +583,7 @@
     this.el.paid.textContent = fmtMoney(receipt.paid);
     this.el.could.textContent = fmtMoney(receipt.could_have);
     this.el.saved.textContent = fmtMoney(receipt.saved);
-    this.el.pct.textContent = "OR " + Math.round(100 * receipt.rate) + "% lower";
+    this.el.pct.textContent = "OR " + PT.formatPercent(receipt.rate) + "% lower";
     this.el.results.classList.remove("ptx-hidden");
   };
 

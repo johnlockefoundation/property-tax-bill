@@ -236,7 +236,9 @@ test("the search contract and candidate cap are preserved", () => {
   assert.ok(pluginApp.includes("PT.keepResidential"), "residential filter");
   assert.ok(pluginCalc.includes("Number(a.improvval) > 0"), "no-land-use-data fallback");
   assert.ok(pluginCalc.includes("keepResidential"), "the residential filter is shared, not per-app");
-  assert.ok(pluginApp.includes('Math.round(100 * receipt.rate) + "% lower"'), "percent is the published rate");
+  assert.ok(pluginCalc.includes("function formatPercent"), "percent formatting is shared calc, not per-app");
+  assert.ok(pluginApp.includes('PT.formatPercent(receipt.rate) + "% lower"'), "percent is the published rate");
+  assert.ok(pluginApp.includes("PT.formatPercent(this.county.savings_rate)"), "county-level rate uses the shared formatter");
 });
 
 test("the padded-address fallback ships in the widget too", { skip: !hasDemo && "demo repo not present" }, () => {
